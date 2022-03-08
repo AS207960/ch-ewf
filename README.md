@@ -16,6 +16,8 @@ database_url = "postgres://user:pass@host/db_name"
 documents_path = "<path to store response PDFs>"
 ```
 
+The client can also be configured using environment variables, of the form `CH_EWF_PRESENTER_ID` etc.
+
 ### Presenter account 
 
 You will need to apply for a presenter account from Companies House, either with a credit account

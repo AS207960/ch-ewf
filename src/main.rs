@@ -179,7 +179,7 @@ async fn main() {
             .short('s')
             .long("settings")
             .takes_value(true)
-            .required(true)
+            .required(false)
             .help("Location of the settings file"))
         .get_matches();
 
@@ -190,8 +190,11 @@ async fn main() {
         pretty_env_logger::init();
     }
 
-    let settings: Config = config::Config::builder()
-        .add_source(config::File::with_name(args.value_of("settings").unwrap()))
+    let mut settings_builder = config::Config::builder();
+    if let Some(settings_file) = args.value_of("settings") {
+        settings_builder = settings_builder.add_source(config::File::with_name(settings_file))
+    }
+    let settings: Config = settings_builder
         .add_source(config::Environment::with_prefix("CH_EWF"))
         .build()
         .unwrap()
