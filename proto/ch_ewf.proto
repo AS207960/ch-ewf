@@ -1,0 +1,81 @@
+syntax = "proto3";
+package ch_ewf;
+
+import "e_reminders.proto";
+import "payment_periods.proto";
+import "members_data.proto";
+import "company_data.proto";
+import "form_submission.proto";
+import "confirmation_statement.proto";
+import "accounting_reference_date.proto";
+import "change_of_name.proto";
+import "change_registered_office.proto";
+import "sail_address.proto";
+import "change_of_location.proto";
+import "officer_appointment.proto";
+import "officer_resignation.proto";
+import "officer_change.proto";
+import "psc_notification.proto";
+import "psc_change_details.proto";
+import "psc_cessation.proto";
+import "psc_statement_notification.proto";
+import "psc_statement_withdrawal.proto";
+import "register_elect_or_withdraw.proto";
+import "return_allotment_shares.proto";
+import "members_register.proto";
+import "members_register_update.proto";
+import "company_incorporation.proto";
+import "charge_registration.proto";
+import "charge_update.proto";
+import "charge_search.proto";
+
+service CHFilling {
+  rpc CompanyData (company_data.CompanyDataRequest) returns (company_data.CompanyDataResponse) {}
+  rpc GetEReminders (e_reminders.GetERemindersRequest) returns (e_reminders.EReminders) {}
+  rpc SetEReminders (e_reminders.SetERemindersRequest) returns (e_reminders.EReminders) {}
+  rpc PaymentPeriods (payment_periods.PaymentPeriodsRequest) returns (payment_periods.PaymentPeriodsResponse) {}
+  rpc MembersRegister (members_data.MembersRegisterRequest) returns (members_data.MembersRegisterResponse) {}
+  rpc ChargeSearch (charge_search.ChargeSearchRequest) returns (charge_search.ChargeSearchResponse) {}
+  // AD01 / LLAD01
+  rpc ChangeRegisteredOffice (change_registered_office.ChangeRegisteredOffice) returns (form_submission.SubmissionResponse) {}
+  // AD02 / LLAD02
+  rpc SAILAddress (sail_address.SAILAddress) returns (form_submission.SubmissionResponse) {}
+  // AD03 / AD04 / LLAD03 / LLAD04
+  rpc ChangeOfLocation (change_of_location.ChangeOfLocation) returns (form_submission.SubmissionResponse) {}
+  // AP01 / AP02 / AP03 / AP04 / LLAP01 / LLAP02
+  rpc OfficerAppointment (officer_appointment.OfficerAppointment) returns (form_submission.SubmissionResponse) {}
+  // TM01 / TM02 / LLTM01
+  rpc OfficerResignation (officer_resignation.OfficerResignation) returns (form_submission.SubmissionResponse) {}
+  // CH01 / CH02 / CH03 / CH04 / LLCH01 / LLCH02
+  rpc OfficerChange (officer_change.OfficerChange) returns (form_submission.SubmissionResponse) {}
+  // SH01
+  rpc ReturnOfAllotmentShares (return_allotment_shares.ReturnOfAllotmentShares) returns (form_submission.SubmissionResponse) {}
+  // AA01 / LLAA01
+  rpc AccountingReferenceDate (accounting_reference_date.AccountingReferenceDate) returns (form_submission.SubmissionResponse) {}
+  // IN01 / LLIN01
+  rpc CompanyIncorporation (company_incorporation.CompanyIncorporation) returns (form_submission.SubmissionResponse) {}
+  // NM01 / NM04 / LLNM01
+  rpc ChangeOfName (change_of_name.ChangeOfName) returns (form_submission.SubmissionResponse) {}
+  // CS01 / LLCS01
+  rpc ConfirmationStatement (confirmation_statement.ConfirmationStatement) returns (form_submission.SubmissionResponse) {}
+  // PSC01 / PSC02 / PSC03 / LLPSC01 / LLPSC02 / LLPSC03
+  rpc PSCNotification (psc_notification.PSCNotification) returns (form_submission.SubmissionResponse) {}
+  // PSC04 / PSC05 / PSC06 / LLPSC04 / LLPSC05 / LLPSC06
+  rpc PSCChangeDetails (psc_change_details.PSCChangeDetails) returns (form_submission.SubmissionResponse) {}
+  // PSC07 / LLPSC07
+  rpc PSCCessation (psc_cessation.PSCCessation) returns (form_submission.SubmissionResponse) {}
+  // PSC08 / LLPSC08
+  rpc PSCStatementNotification (psc_statement_notification.PSCStatementNotification) returns (form_submission.SubmissionResponse) {}
+  // PSC09 / LLPSC09
+  rpc PSCStatementWithdrawal (psc_statement_withdrawal.PSCStatementWithdrawal) returns (form_submission.SubmissionResponse) {}
+  // EH01 / EH02 / EH03 / EH04 / EW01 / EW02 / EW03 / EW04 / LLEH01 / LLEH02 / LLEH04 / LLEW01 / LLEW02 / LLEW04
+  rpc RegisterElectOrWithdraw (register_elect_or_withdraw.RegisterElectOrWithdraw) returns (form_submission.SubmissionResponse) {}
+  // EH05 / EW05
+  rpc MembersRegisterElectOrWithdraw (members_register.MembersRegisterElectOrWithdraw) returns (form_submission.SubmissionResponse) {}
+  // EH06
+  rpc MembersRegisterUpdate (members_register_update.MembersRegisterUpdate) returns (form_submission.SubmissionResponse) {}
+  // MR01 / MR02 / LLMR01 / LLMR02
+  rpc ChargeRegistration (charge_registration.ChargeRegistration) returns (form_submission.SubmissionResponse) {}
+  // MR04 / MR05 / LLMR04 / LLMR05
+  rpc ChargeUpdate (charge_update.ChargeUpdate) returns (form_submission.SubmissionResponse) {}
+}

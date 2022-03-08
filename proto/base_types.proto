@@ -1,0 +1,220 @@
+syntax = "proto3";
+package ch_ewf.base_types;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+enum CompanyType {
+  CompanyEnglandAndWales = 0;
+  CompanyScotland = 1;
+  CompanyNorthernIreland = 2;
+  CompanyIreland = 3;
+  LimitedLiabilityPartnershipEnglandAndWales = 4;
+  LimitedLiabilityPartnershipScotland = 5;
+  LimitedLiabilityPartnershipNorthernIreland = 6;
+}
+
+message Capital {
+  double total_amount_unpaid = 1;
+  double total_number_of_shares_issued = 2;
+  string currency = 3;
+  double total_aggregate_nominal_value = 4;
+  repeated Share shares = 5;
+}
+
+message Share {
+  string share_class = 1;
+  string prescribed_particulars = 2;
+  double num_shares = 3;
+  double aggregate_nominal_value = 4;
+}
+
+message Shareholder {
+  message PartsName {
+    string surname = 1;
+    repeated string forenames = 2;
+  }
+
+  oneof name {
+    PartsName parts_name = 1;
+    string amalgamated_name = 2;
+  }
+  BaseAddress address = 3;
+}
+
+message BaseAddress {
+  string premise = 1;
+  string street = 2;
+  string thoroughfare = 3;
+  string post_town = 4;
+  string county = 5;
+  string postcode = 6;
+  string country = 7;
+}
+
+message UKAddress {
+  enum Country {
+    Undefined = 0;
+    England = 1;
+    Wales = 2;
+    Scotland = 3;
+    NorthernIreland = 4;
+    UK = 5;
+  }
+
+  string premise = 1;
+  string street = 2;
+  string thoroughfare = 3;
+  string post_town = 4;
+  string county = 5;
+  Country country = 6;
+  string postcode = 7;
+  string care_of_name = 8;
+  string po_box = 9;
+}
+
+enum RecordType {
+  Members = 0;
+  Directors = 1;
+  DirectorsServiceContracts = 2;
+  DirectorsIndemnities = 3;
+  Secretaries = 4;
+  ResolutionsAndMeetings = 5;
+  DebentureHolders = 6;
+  RegisterOfChargesEnglandWalesAndNorthernIreland = 7;
+  RegisterOfChargesScotland = 8;
+  OwnSharePurchaseContracts = 9;
+  OwnShareCapital = 10;
+  InvestigationReports = 11;
+  RegisterOfInterests = 12;
+  LLPMembers = 13;
+  PersonsOfSignificantControl = 14;
+}
+
+enum Register {
+  RegisterDirectors = 0;
+  RegisterDirectorsUsualResidentialAddress = 1;
+  RegisterSecretaries = 2;
+  RegisterMembers = 3;
+  RegisterLLPMembers = 4;
+  RegisterLLPMembersUsualResidentialAddress = 5;
+  RegisterPersonsOfSignificantControl = 6;
+}
+
+message Person {
+  string forename = 1;
+  string surname = 2;
+}
+
+message CorporateOfficer {
+  string corporate_name = 1;
+  CompanyAddress address = 2;
+  CompanyIdentification company_identification = 3;
+}
+
+message CompanyIdentification {
+  oneof company_identification {
+    string uk_registration_number = 3;
+    NonUKCompanyIdentification non_uk = 4;
+  }
+}
+
+message NonUKCompanyIdentification {
+  string place_registered = 1;
+  string registration_number = 2;
+  string governing_law = 3;
+  string legal_form = 4;
+}
+
+message CompanyAddress {
+  base_types.BaseAddress base_address = 1;
+  string care_of_name = 2;
+  string po_box = 3;
+}
+
+message PersonName {
+  string title = 1;
+  repeated string forenames = 2;
+  string surname = 3;
+}
+
+message PreviousName {
+  string forename = 1;
+  string surname = 2;
+}
+
+message DirectorPerson {
+  PersonName person = 1;
+  ServiceAddress service_address = 2;
+  google.protobuf.Timestamp date_of_birth = 3;
+  string nationality = 4;
+  string occupation = 5;
+  string country_of_residence = 6;
+  repeated PreviousName previous_names = 7;
+  ResidentialAddress residential_address = 8;
+}
+
+message SecretaryPerson {
+  PersonName person = 1;
+  ServiceAddress service_address = 2;
+  repeated PreviousName previous_names = 3;
+}
+
+message MemberPerson {
+  PersonName person = 1;
+  ServiceAddress service_address = 2;
+  google.protobuf.Timestamp date_of_birth = 3;
+  string country_of_residence = 4;
+  ResidentialAddress residential_address = 5;
+  repeated PreviousName previous_names = 6;
+}
+
+message ServiceAddress {
+  oneof value {
+    bool same_as_registered_office = 1;
+    CompanyAddress address = 2;
+  }
+}
+
+message ResidentialAddress {
+  message ResidentialAddress {
+    base_types.BaseAddress address = 1;
+    google.protobuf.BoolValue secure_address = 2;
+  }
+
+  oneof value {
+    bool same_as_service_address = 1;
+    ResidentialAddress address = 2;
+  }
+}
+
+message PartialDOB {
+  uint32 month = 1;
+  uint64 year = 2;
+}
+
+message PersonalAttribute {
+  enum PersonalAttributeType {
+    BirthTown = 0;
+    Telephone = 1;
+    NationalInsurance = 2;
+    PassportNumber = 3;
+    MothersMaiden = 4;
+    FathersForename = 5;
+  }
+
+  PersonalAttributeType personal_attribute = 1;
+  string personal_data = 2;
+}
+
+message Document {
+  bytes data = 1;
+  google.protobuf.Timestamp date = 2;
+  string filename = 3;
+  ContentType content_type = 4;
+}
+
+enum ContentType {
+  PDF = 0;
+  PCL = 1;
+}

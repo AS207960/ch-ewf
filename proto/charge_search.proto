@@ -1,0 +1,37 @@
+syntax = "proto3";
+package ch_ewf.charge_search;
+
+import "google/protobuf/timestamp.proto";
+import "base_types.proto";
+
+message ChargeSearchRequest {
+  uint32 company_number = 1;
+  base_types.CompanyType company_type = 2;
+  string authentication_code = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+}
+
+message ChargeSearchResponse {
+  repeated Charge charges = 1;
+}
+
+message Charge {
+  oneof charge_id {
+    string charge_code = 1;
+    string existing_charge_key = 2;
+  }
+  google.protobuf.Timestamp created_date = 3;
+  google.protobuf.Timestamp acquisition_date = 4;
+  oneof description {
+    string charge_description = 5;
+    InstrumentDescription instrument_description = 6;
+  }
+  string persons_entitled = 7;
+  bool additional_persons_entitled = 8;
+}
+
+message InstrumentDescription {
+  string instrument_description = 1;
+  string short_particulars = 2;
+}

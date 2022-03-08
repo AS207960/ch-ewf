@@ -1,0 +1,44 @@
+syntax = "proto3";
+package ch_ewf.officer_appointment;
+
+import "google/protobuf/timestamp.proto";
+import "base_types.proto";
+import "form_submission.proto";
+
+message OfficerAppointment {
+  form_submission.FormSubmission form_submission = 1;
+  google.protobuf.Timestamp appointment_date = 2;
+  bool consent_to_act = 3;
+  oneof appointment {
+    Director director = 4;
+    Secretary secretary = 5;
+    Member member = 6;
+  }
+}
+
+message Director {
+  oneof director {
+    base_types.DirectorPerson person = 1;
+    CorporateOfficerAppointment corporate = 2;
+  }
+}
+
+message Secretary {
+  oneof secretary {
+    base_types.SecretaryPerson person = 1;
+    CorporateOfficerAppointment corporate = 2;
+  }
+}
+
+message Member {
+  bool designated = 1;
+  oneof member {
+    base_types.MemberPerson person = 2;
+    CorporateOfficerAppointment corporate = 3;
+  }
+}
+
+message CorporateOfficerAppointment {
+  base_types.Person person = 1;
+  base_types.CorporateOfficer corporate = 3;
+}

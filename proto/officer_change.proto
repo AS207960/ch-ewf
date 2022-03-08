@@ -1,0 +1,88 @@
+syntax = "proto3";
+package ch_ewf.officer_change;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "base_types.proto";
+import "form_submission.proto";
+
+message OfficerChange {
+  form_submission.FormSubmission form_submission = 1;
+  google.protobuf.Timestamp date_of_change = 2;
+  oneof Change {
+    Director director = 3;
+    Secretary secretary = 4;
+    Member member = 5;
+  }
+}
+
+message Director {
+  oneof director {
+    DirectorPersonChange person = 1;
+    CorporateChange corporate = 2;
+  }
+}
+
+message Secretary {
+  oneof secretary {
+    SecretaryPersonChange person = 1;
+    CorporateChange corporate = 2;
+  }
+}
+
+message Member {
+  oneof member {
+    MemberPersonChange person = 1;
+    CorporateMemberChange corporate = 2;
+  }
+}
+
+message DirectorPersonChange {
+  base_types.PersonName person = 1;
+  google.protobuf.Timestamp date_of_birth = 2;
+  base_types.PersonName new_name = 3;
+  ServiceAddress new_service_address = 4;
+  base_types.ResidentialAddress new_residential_address = 5;
+  google.protobuf.StringValue new_nationality = 6;
+  google.protobuf.StringValue new_country_of_residence = 7;
+  google.protobuf.StringValue new_occupation = 8;
+}
+
+message SecretaryPersonChange {
+  base_types.PersonName person = 1;
+  google.protobuf.Timestamp date_of_birth = 2;
+  base_types.PersonName new_name = 3;
+  base_types.ServiceAddress new_service_address = 4;
+}
+
+message MemberPersonChange {
+  base_types.PersonName person = 1;
+  google.protobuf.Timestamp date_of_birth = 2;
+  base_types.PersonName new_name = 3;
+  ServiceAddress new_service_address = 4;
+  base_types.ResidentialAddress new_residential_address = 5;
+  google.protobuf.StringValue new_country_of_residence = 6;
+  MemberDesignated designated = 7;
+}
+
+message MemberDesignated {
+  bool designated = 1;
+  bool consent_to_act = 2;
+}
+
+message ServiceAddress {
+  base_types.ServiceAddress address = 1;
+  bool residential_address_unchanged = 2;
+}
+
+message CorporateChange {
+  string corporate_name = 1;
+  google.protobuf.StringValue new_corporate_name = 2;
+  base_types.CompanyAddress new_address = 3;
+  base_types.CompanyIdentification new_company_identification = 4;
+}
+
+message CorporateMemberChange {
+  CorporateChange corporate_change = 1;
+  MemberDesignated designated = 2;
+}

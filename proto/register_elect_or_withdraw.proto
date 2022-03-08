@@ -1,0 +1,16 @@
+syntax = "proto3";
+package ch_ewf.register_elect_or_withdraw;
+
+import "base_types.proto";
+import "form_submission.proto";
+
+message RegisterElectOrWithdraw {
+  form_submission.FormSubmission form_submission = 1;
+  ElectOrWithdraw elect_or_withdraw = 2;
+  base_types.Register register = 3;
+}
+
+enum ElectOrWithdraw {
+  Elect = 0;
+  Withdraw = 1;
+}

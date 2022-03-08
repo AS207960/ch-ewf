@@ -1,0 +1,20 @@
+syntax = "proto3";
+package ch_ewf.change_of_name;
+
+import "google/protobuf/timestamp.proto";
+import "form_submission.proto";
+
+message ChangeOfName {
+  form_submission.FormSubmission form_submission = 1;
+  MethodOfChange method_of_change = 2;
+  string proposed_name = 3;
+  google.protobuf.Timestamp meeting_date = 4;
+  bool same_day = 5;
+  bool notice_given = 6;
+}
+
+enum MethodOfChange {
+  Resolution = 0;
+  Articles = 1;
+  LLP = 2;
+}

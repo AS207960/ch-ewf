@@ -1,0 +1,76 @@
+syntax = "proto3";
+package ch_ewf.members_register_update;
+
+import "google/protobuf/timestamp.proto";
+import "base_types.proto";
+import "form_submission.proto";
+import "members_data.proto";
+
+message MembersRegisterUpdate {
+  form_submission.FormSubmission form_submission = 1;
+  SingleMember single_member = 2;
+  oneof members {
+    MembersWithShares members_with_shares = 3;
+    MembersWithoutShares members_without_shares = 4;
+  }
+}
+
+enum SingleMember {
+  None = 0;
+  NoLongerSingleMember = 1;
+  BecomingSingleMember = 2;
+}
+
+message MembersWithShares {
+  repeated MemberWithShares members = 1;
+}
+
+message MemberWithShares {
+  repeated members_data.MemberName name = 1;
+  base_types.BaseAddress address = 2;
+  oneof member_status {
+    NewOrExistingMember new_or_existing_member = 3;
+    CeasedToBeMember ceased_to_be_member = 4;
+  }
+  repeated Transfer transfers = 5;
+  repeated Allotment allotments = 6;
+}
+
+message Transfer {
+  members_data.Share share = 1;
+  google.protobuf.Timestamp transfer_date = 2;
+}
+
+message Allotment {
+  members_data.Share share = 1;
+  google.protobuf.Timestamp allotment_date = 2;
+}
+
+message NewOrExistingMember {
+  oneof member_status {
+    bool new_member = 1;
+    google.protobuf.Timestamp existing_member_date_registered = 2;
+  }
+  repeated members_data.SharesOrStockHeld shares_or_stock_held = 3;
+}
+
+message MembersWithoutShares {
+  repeated MemberWithoutShares members = 1;
+}
+
+message MemberWithoutShares {
+  members_data.CompanyMember member = 1;
+  oneof member_status {
+    bool new_member = 2;
+    google.protobuf.Timestamp existing_member_date_registered = 3;
+    CeasedToBeMember ceased_to_be_member = 4;
+  }
+}
+
+message CeasedToBeMember {
+  google.protobuf.Timestamp date_registered = 1;
+  oneof status {
+    bool ceased_to_be_member = 2;
+    google.protobuf.Timestamp date_ceased = 3;
+  }
+}

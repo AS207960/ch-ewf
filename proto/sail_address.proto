@@ -1,0 +1,10 @@
+syntax = "proto3";
+package ch_ewf.sail_address;
+
+import "base_types.proto";
+import "form_submission.proto";
+
+message SAILAddress {
+  form_submission.FormSubmission form_submission = 1;
+  base_types.UKAddress address = 2;
+}

@@ -1,0 +1,78 @@
+syntax = "proto3";
+package ch_ewf.members_data;
+
+import "google/protobuf/timestamp.proto";
+import "base_types.proto";
+
+message MembersRegisterRequest {
+  uint32 company_number = 1;
+  base_types.CompanyType company_type = 2;
+  string authentication_code = 3;
+}
+
+message MembersRegisterResponse {
+  repeated Member members = 1;
+}
+
+message Member {
+  oneof member {
+    MemberWithShares member_with_shares = 1;
+    MemberWithoutShares member_without_shares = 2;
+  }
+}
+
+message MemberName {
+  message PersonName {
+    string forename = 1;
+    string surname = 2;
+  }
+
+  oneof name {
+    PersonName individual_name = 1;
+    string corporate_name = 2;
+  }
+}
+
+message Share {
+  double num_shares = 1;
+  string share_class = 2;
+  string share_reference = 3;
+}
+
+message SharesHeld {
+  Share share = 1;
+  double amount_paid_up = 2;
+}
+
+message StockHeld {
+  string stock_class = 1;
+  double amount_held = 2;
+  string currency = 3;
+}
+
+message SharesOrStockHeld {
+  oneof shares_or_stock {
+    members_data.SharesHeld shares = 1;
+    members_data.StockHeld stock = 2;
+  }
+}
+
+message MemberWithShares {
+  repeated SharesOrStockHeld shares_or_stock_held = 1;
+  repeated MemberName name = 2;
+  base_types.BaseAddress address = 3;
+  google.protobuf.Timestamp date_registered = 4;
+  google.protobuf.Timestamp date_ceased = 5;
+}
+
+message CompanyMember {
+  string class = 1;
+  MemberName name = 2;
+  base_types.BaseAddress address = 3;
+}
+
+message MemberWithoutShares {
+  CompanyMember member = 1;
+  google.protobuf.Timestamp date_registered = 4;
+  google.protobuf.Timestamp date_ceased = 5;
+}

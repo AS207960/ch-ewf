@@ -1,0 +1,30 @@
+syntax = "proto3";
+package ch_ewf.accounting_reference_date;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "form_submission.proto";
+
+message AccountingReferenceDate {
+  form_submission.FormSubmission form_submission = 1;
+  google.protobuf.Timestamp current_accounting_reference_date = 2;
+  ChangeToPeriod change_to_period = 3;
+  google.protobuf.Timestamp new_accounting_reference_date = 4;
+  FiveYearExtension five_year_extension_details = 5;
+}
+
+enum ChangeToPeriod {
+  Shorten = 0;
+  Extend = 1;
+}
+
+message FiveYearExtension {
+  ExtensionReason extension_reason = 1;
+  google.protobuf.StringValue extension_authorization_code = 2;
+}
+
+enum ExtensionReason {
+  Administration = 0;
+  SecretaryOfState = 1;
+  UKParent = 2;
+}

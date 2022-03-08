@@ -1,0 +1,187 @@
+syntax = "proto3";
+package ch_ewf.company_incorporation;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "base_types.proto";
+import "form_submission.proto";
+import "officer_appointment.proto";
+import "psc.proto";
+
+message CompanyIncorporation {
+  string company_name = 1;
+  form_submission.Language language = 2;
+  google.protobuf.StringValue customer_reference = 3;
+  google.protobuf.Timestamp date_signed = 4;
+  string contact_name = 5;
+  string contact_number = 6;
+  CompanyType company_type = 7;
+  base_types.Document cic36 = 8;
+  repeated base_types.Register registers_held_on_public_record = 9;
+  CountryOfIncorporation country_of_incorporation = 10;
+  base_types.UKAddress registered_office = 11;
+  base_types.Document memorandum = 12;
+  Articles articles = 13;
+  bool restricted_articles = 14;
+  repeated Appointment appointments = 15;
+  oneof psc {
+    PSCStatement psc_statement = 16;
+    PSCs pscs = 17;
+  }
+  repeated base_types.Capital statement_of_capital = 18;
+  repeated Subscriber subscribers = 19;
+  repeated Guarantor guarantors = 20;
+  oneof authorizer {
+    Agent agent = 21;
+    Authorizer solicitor = 22;
+    Authorizer member = 23;
+    AuthorizerSubscribers authorizer_subscribers = 24;
+  }
+  bool same_day = 25;
+  base_types.Document same_name = 26;
+  base_types.Document name_authorization = 27;
+  google.protobuf.StringValue reject_reference = 28;
+  repeated string sic_codes = 29;
+  google.protobuf.BoolValue single_member_company = 30;
+  base_types.Document articles_doc = 31;
+  CorporationTaxRegistration corporation_tax_registration = 32;
+}
+
+enum CompanyType {
+  LimitedByShares = 0;
+  PLC = 1;
+  LimitedByGuarantee = 2;
+  LimitedByGuaranteeExempt = 3;
+  LLP = 4;
+  LLPOnlyDesignated = 5;
+}
+
+enum CountryOfIncorporation {
+  EnglandAndWales = 0;
+  Scotland = 1;
+  Wales = 2;
+  NorthernIreland = 3;
+}
+
+enum Articles {
+  None = 0;
+  ModelByShares = 1;
+  ModelByGuarantee = 2;
+  ModelPLC = 3;
+  AmendedByShares = 4;
+  AmendedByGuarantee = 5;
+  AmendedPLC = 6;
+  Bespoke = 7;
+}
+
+message Appointment {
+  bool consent_to_act = 1;
+  oneof appointment {
+    officer_appointment.Director director = 2;
+    officer_appointment.Secretary secretary = 3;
+    officer_appointment.Member member = 4;
+  }
+}
+
+enum PSCStatement {
+  NoPSC = 0;
+}
+
+message PSCs {
+  repeated PSC pscs = 1;
+}
+
+message PSC {
+  psc.Notification notification = 1;
+  psc.NatureOfControls nature_of_control = 2;
+}
+
+message Person {
+  oneof name {
+    base_types.Person person = 1;
+    CorporateName corporate = 2;
+  }
+  base_types.BaseAddress address = 3;
+  repeated base_types.PersonalAttribute personal_attributes = 4;
+  string member_class = 5;
+}
+
+message CorporateName {
+  base_types.Person person = 1;
+  string corporate_name = 2;
+}
+
+message Subscriber {
+  Person person = 1;
+  repeated Allotment allotments = 2;
+  MemorandumStatement memorandum_statement = 3;
+}
+
+message Guarantor {
+  Person person = 1;
+  string amount_guaranteed = 2;
+  MemorandumStatement memorandum_statement = 3;
+}
+
+message Allotment {
+  string share_class = 1;
+  double num_shares = 2;
+  double amount_paid_due_per_share = 3;
+  double amount_unpaid_per_share = 4;
+  string share_currency = 5;
+  double share_value = 6;
+  string share_reference = 7;
+}
+
+enum MemorandumStatement {
+  MemberWithShares = 0;
+  MemberWithoutShares = 1;
+  NoMemorandumStatement = 2;
+}
+
+message Agent {
+  Authorizer authorizer = 1;
+  base_types.BaseAddress address = 2;
+}
+
+message Authorizer {
+  oneof name {
+    base_types.Person person = 1;
+    CorporateName corporate = 2;
+  }
+  repeated base_types.PersonalAttribute personal_attributes = 3;
+}
+
+message AuthorizerSubscribers {
+  repeated Authorizer subscribers = 1;
+}
+
+message CorporationTaxRegistration {
+  string abbreviated_company_name = 1;
+  google.protobuf.Timestamp first_accounting_period_start_date = 2;
+  google.protobuf.Timestamp accounts_made_up_date = 3;
+  bool ct61_may_apply = 4;
+  oneof principal_place_of_business {
+    bool principal_place_of_business_same_as_registered_office = 5;
+    HMRCAddress principal_place_of_business_address = 6;
+  }
+  TakenOverBusiness taken_over_business = 7;
+}
+
+message HMRCAddress {
+  string address_line_1 = 1;
+  string address_line_2 = 2;
+  string address_line_3 = 3;
+  string address_line_4 = 4;
+  string post_code = 5;
+  string country = 6;
+}
+
+message TakenOverBusiness {
+  string previous_business_name = 1;
+  string previous_business_type = 2;
+  string previous_company_registration_number = 3;
+  HMRCAddress previous_address = 4;
+  string previous_owner_name = 5;
+  HMRCAddress previous_owner_address = 6;
+}

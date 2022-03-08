@@ -1,0 +1,116 @@
+syntax = "proto3";
+package ch_ewf.company_data;
+
+import "google/protobuf/timestamp.proto";
+import "base_types.proto";
+import "psc.proto";
+
+enum CompanyCategory {
+  Plc = 0;
+  ByShares = 1;
+  ByGuarantee = 2;
+  BySharesExemptUnderSection60 = 3;
+  ByGuaranteeExemptUnderSection60 = 4;
+  UnlimitedWithShareCapital = 5;
+  UnlimitedWithoutShareCapital = 6;
+  Llp = 7;
+}
+
+enum Jurisdiction {
+  JurisdictionEnglandAndWales = 0;
+  JurisdictionScotland = 1;
+  JurisdictionWales = 2;
+  JurisdictionNorthernIreland = 3;
+  JurisdictionEU = 4;
+  JurisdictionUK = 5;
+  JurisdictionEngland = 6;
+  JurisdictionOther = 7;
+}
+
+message CompanyDataRequest {
+  uint32 company_number = 1;
+  base_types.CompanyType company_type = 2;
+  string authentication_code = 3;
+  google.protobuf.Timestamp made_up_date = 4;
+}
+
+message CompanyDataResponse {
+  string transaction_id = 1;
+  uint32 company_number = 2;
+  string company_name = 3;
+  CompanyCategory category = 4;
+  Jurisdiction jurisdiction = 5;
+  bool trading_on_market = 6;
+  bool dtr5_applies = 7;
+  bool psc_exempt_as_trading_on_regulated_market = 8;
+  bool psc_exempt_as_shared_admitted_on_market = 9;
+  bool psc_exempt_as_trading_on_uk_regulated_market = 10;
+  google.protobuf.Timestamp made_up_date = 11;
+  google.protobuf.Timestamp next_due_date = 12;
+  base_types.UKAddress registered_office_address = 13;
+  base_types.UKAddress sail_address = 14;
+  repeated base_types.RecordType sail_records = 15;
+  repeated string sic_codes = 16;
+  oneof pscs {
+    psc.CompanyLevelStatement psc_statement = 17;
+    CompanyPSCs company_pscs = 18;
+  }
+  repeated Director directors = 19;
+  repeated Secretary secretaries = 20;
+  repeated Member members = 21;
+  repeated base_types.Capital statement_of_capital = 22;
+  repeated Shareholding shareholdings = 23;
+  repeated base_types.Register held_on_public_record = 24;
+}
+
+message CompanyPSCs {
+  repeated CompanyPSC pscs = 1;
+}
+
+message CompanyPSC {
+  oneof psc {
+    psc.PSCLevelStatement statement_notification = 1;
+    psc.LinkedStatement linked_statement_notification = 2;
+    CompanyDataPSCNotification notification = 3;
+    bool super_secure_individual = 4;
+  }
+}
+
+message CompanyDataPSCNotification {
+  psc.Notification notification = 1;
+  psc.NatureOfControls nature_of_controls = 2;
+  google.protobuf.Timestamp notification_date = 3;
+  google.protobuf.Timestamp cessation_date = 4;
+}
+
+message Director {
+  oneof value {
+    base_types.DirectorPerson person = 1;
+    base_types.CorporateOfficer corporate = 2;
+  }
+  google.protobuf.Timestamp appointment_date = 3;
+  google.protobuf.Timestamp resignation_date = 4;
+}
+
+message Secretary {
+  oneof value {
+    base_types.SecretaryPerson person = 1;
+    base_types.CorporateOfficer corporate = 2;
+  }
+  google.protobuf.Timestamp appointment_date = 3;
+  google.protobuf.Timestamp resignation_date = 4;
+}
+
+message Member {
+  oneof value {
+    base_types.MemberPerson person = 1;
+    base_types.CorporateOfficer corporate = 2;
+  }
+  bool designated = 3;
+}
+
+message Shareholding {
+  string share_class = 1;
+  double number_held = 2;
+  repeated base_types.Shareholder shareholders = 3;
+}

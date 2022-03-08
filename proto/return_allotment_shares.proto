@@ -1,0 +1,24 @@
+syntax = "proto3";
+package ch_ewf.return_allotment_shares;
+
+import "google/protobuf/timestamp.proto";
+import "base_types.proto";
+import "form_submission.proto";
+
+message ReturnOfAllotmentShares {
+  form_submission.FormSubmission form_submission = 1;
+  google.protobuf.Timestamp start_period = 2;
+  google.protobuf.Timestamp end_period = 3;
+  repeated base_types.Capital statement_of_capital = 4;
+  repeated Allotment allotments = 5;
+}
+
+message Allotment {
+  string share_class = 1;
+  double num_shares = 2;
+  double amount_paid_due_per_share = 3;
+  double amount_unpaid_per_share = 4;
+  string share_currency = 5;
+  double share_value = 6;
+  string consideration = 7;
+}

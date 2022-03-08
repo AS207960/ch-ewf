@@ -1,0 +1,21 @@
+syntax = "proto3";
+package ch_ewf.payment_periods;
+
+import "google/protobuf/timestamp.proto";
+import "base_types.proto";
+
+message PaymentPeriodsRequest {
+  uint32 company_number = 1;
+  base_types.CompanyType company_type = 2;
+  string authentication_code = 3;
+}
+
+message PaymentPeriodsResponse {
+  message PaymentPeriod {
+    google.protobuf.Timestamp start_date = 1;
+    google.protobuf.Timestamp end_date = 2;
+    bool period_paid = 3;
+  }
+
+  repeated PaymentPeriod periods = 1;
+}

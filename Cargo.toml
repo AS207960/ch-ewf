@@ -1,0 +1,36 @@
+[package]
+name = "ch_ewf"
+version = "0.1.0"
+authors = ["Q <q@as207960.net>"]
+edition = "2018"
+
+[dependencies]
+log = "0.4"
+pretty_env_logger = "0.4"
+chrono = { version = "0.4", features = ["serde"] }
+chrono-tz = "0.4"
+xml_serde = "1"
+serde = "1.0"
+serde_derive = "1.0"
+serde_json = "1.0"
+uuid = { version = "0.8", features = ["v4"] }
+md5 = "0.7"
+reqwest = { version = "0.11", features = ["blocking"] }
+tonic = "0.6"
+tokio = {version = "1.0", features = ["rt-multi-thread", "macros", "fs"]}
+prost = "0.9"
+prost-types = "0.9"
+isocountry = "0.3"
+rand = "0.8"
+base64 = "0.13"
+diesel = { version = "1", features = ["postgres", "uuidv07", "extras"] }
+diesel-derive-enum = { version = "1", features = ["postgres"] }
+diesel_migrations = "1"
+r2d2 = "0.8"
+tokio-diesel = { git = "https://github.com/mehcode/tokio-diesel.git" }
+config = "0"
+clap = "3"
+systemd-journal-logger = "0"
+
+[build-dependencies]
+tonic-build = "0.6"

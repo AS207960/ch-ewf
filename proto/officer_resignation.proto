@@ -1,0 +1,42 @@
+syntax = "proto3";
+package ch_ewf.officer_resignation;
+
+import "google/protobuf/timestamp.proto";
+import "base_types.proto";
+import "form_submission.proto";
+
+message OfficerResignation {
+  form_submission.FormSubmission form_submission = 1;
+  google.protobuf.Timestamp resignation_date = 2;
+  oneof resignation {
+    Director director = 4;
+    Secretary secretary = 5;
+    Member member = 6;
+  }
+}
+
+message Director {
+  oneof director {
+    Person person = 1;
+    string corporate = 2;
+  }
+}
+
+message Secretary {
+  oneof secretary {
+    base_types.PersonName person = 1;
+    string corporate = 2;
+  }
+}
+
+message Member {
+  oneof member {
+    Person person = 1;
+    string corporate = 2;
+  }
+}
+
+message Person {
+  base_types.PersonName person = 1;
+  google.protobuf.Timestamp date_of_birth = 2;
+}

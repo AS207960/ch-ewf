@@ -1,0 +1,28 @@
+syntax = "proto3";
+package ch_ewf.change_of_location;
+
+import "base_types.proto";
+import "form_submission.proto";
+
+message ChangeOfLocation {
+  form_submission.FormSubmission form_submission = 1;
+  oneof move {
+    MoveToSAILAddress move_to_sail = 2;
+    MoveToRegisteredOffice move_to_registered_office = 3;
+  }
+}
+
+message MoveToSAILAddress {
+  repeated base_types.RecordType records = 1;
+}
+
+message MoveToRegisteredOffice {
+  message Records {
+    repeated base_types.RecordType records = 1;
+  }
+
+  oneof move {
+    bool all = 1;
+    Records some = 2;
+  }
+}

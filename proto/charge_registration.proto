@@ -1,0 +1,31 @@
+syntax = "proto3";
+package ch_ewf.charge_registration;
+
+import "google/protobuf/timestamp.proto";
+import "base_types.proto";
+import "form_submission.proto";
+
+message ChargeRegistration {
+  form_submission.FormSubmission form_submission = 1;
+  google.protobuf.Timestamp creation_date = 2;
+  google.protobuf.Timestamp property_acquired_date = 3;
+  repeated string persons_entitled = 4;
+  bool additional_persons_entitled = 5;
+  string charge_description = 6;
+  bool fixed_charge = 7;
+  FloatingCharge floating_charge = 8;
+  bool negative_pledge = 9;
+  bool bare_trustee = 10;
+  string deed_certification_statement = 11;
+  string deed_certified_by = 12;
+  repeated base_types.PersonalAttribute personal_attributes = 13;
+  base_types.Document deed = 14;
+  base_types.Document deed_supplemental = 15;
+}
+
+enum FloatingCharge {
+    NA = 0;
+    CoversAll = 1;
+    DoesNotCoverAll = 2;
+}
+

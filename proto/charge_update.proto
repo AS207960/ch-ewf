@@ -1,0 +1,45 @@
+syntax = "proto3";
+package ch_ewf.charge_update;
+
+import "google/protobuf/timestamp.proto";
+import "base_types.proto";
+import "form_submission.proto";
+
+message ChargeUpdate {
+  form_submission.FormSubmission form_submission = 1;
+  oneof charge_id {
+    string charge_code = 2;
+    ExistingChargeKey existing_charge_key = 3;
+  }
+  oneof update {
+    Satisfaction satisfaction = 4;
+    PartCeaseOrRelease part_cease_or_release = 5;
+    CeaseOrRelease full_cease_or_release = 6;
+  }
+  string person_delivering_name = 7;
+  base_types.CompanyAddress person_delivering_address = 8;
+  string person_interest_in_charge = 9;
+}
+
+message ExistingChargeKey {
+  string existing_charge_key = 1;
+  google.protobuf.Timestamp creation_date = 2;
+  string instrument_description = 3;
+  string short_particulars = 4;
+}
+
+enum Satisfaction {
+  Full = 0;
+  Part = 1;
+}
+
+enum CeaseOrRelease {
+  Cease = 0;
+  Release = 1;
+  CeaseAndRelease = 2;
+}
+
+message PartCeaseOrRelease {
+  CeaseOrRelease cease_or_release = 1;
+  string assets_description = 2;
+}

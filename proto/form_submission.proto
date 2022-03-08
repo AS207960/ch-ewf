@@ -1,0 +1,29 @@
+syntax = "proto3";
+package ch_ewf.form_submission;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "base_types.proto";
+
+message FormSubmission {
+  uint32 company_number = 1;
+  base_types.CompanyType company_type = 2;
+  string company_name = 3;
+  string authentication_code = 4;
+  Language language = 5;
+  google.protobuf.StringValue customer_reference = 6;
+  google.protobuf.Timestamp date_signed = 7;
+  string contact_name = 8;
+  string contact_number = 9;
+}
+
+enum Language {
+  English = 0;
+  Welsh = 1;
+}
+
+message SubmissionResponse {
+  string transaction_id = 1;
+  string ch_submission_number = 2;
+  string submission_id = 3;
+}

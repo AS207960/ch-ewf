@@ -1,0 +1,14 @@
+syntax = "proto3";
+package ch_ewf.psc_notification;
+
+import "google/protobuf/timestamp.proto";
+import "form_submission.proto";
+import "psc.proto";
+
+message PSCNotification {
+  form_submission.FormSubmission form_submission = 1;
+  psc.Notification notification = 2;
+  psc.NatureOfControls nature_of_control = 3;
+  google.protobuf.Timestamp notification_date = 4;
+  google.protobuf.Timestamp register_entry_date = 5;
+}

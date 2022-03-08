@@ -1,0 +1,37 @@
+syntax = "proto3";
+package ch_ewf.members_register;
+
+import "google/protobuf/timestamp.proto";
+import "form_submission.proto";
+import "members_data.proto";
+
+message MembersRegisterElectOrWithdraw {
+  form_submission.FormSubmission form_submission = 1;
+  oneof elect {
+    ElectToHold elect_to_hold = 2;
+    bool withdraw_election_to_hold = 3;
+  }
+}
+
+message ElectToHold {
+  oneof members {
+    MembersWithShares members_with_shares = 1;
+    MembersWithoutShares members_without_shares = 2;
+  }
+  bool state_all_members_assented = 3;
+  bool state_overseas_registers_discontinued = 4;
+  bool state_single_member_company = 5;
+}
+
+message MembersWithShares {
+  repeated members_data.MemberWithShares members = 1;
+}
+
+message MembersWithoutShares {
+  repeated MemberWithoutShares members = 1;
+}
+
+message MemberWithoutShares {
+  members_data.CompanyMember member = 1;
+  google.protobuf.Timestamp date_registered = 2;
+}

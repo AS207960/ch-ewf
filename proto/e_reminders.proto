@@ -1,0 +1,26 @@
+syntax = "proto3";
+package ch_ewf.e_reminders;
+
+import "base_types.proto";
+
+message GetERemindersRequest {
+  uint32 company_number = 1;
+  base_types.CompanyType company_type = 2;
+  string authentication_code = 3;
+}
+
+message SetERemindersRequest {
+  uint32 company_number = 1;
+  base_types.CompanyType company_type = 2;
+  string authentication_code = 3;
+  repeated string email_addresses = 4;
+}
+
+message EReminders {
+  repeated EReminderRecipient recipients = 1;
+}
+
+message EReminderRecipient {
+  string email_address = 1;
+  bool activated = 2;
+}

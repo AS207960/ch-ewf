@@ -1,0 +1,5 @@
+/target
+settings.toml
+settings-test.toml
+/documents
+/py_test

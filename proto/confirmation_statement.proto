@@ -1,0 +1,46 @@
+syntax = "proto3";
+package ch_ewf.confirmation_statement;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "base_types.proto";
+import "form_submission.proto";
+
+message ConfirmationStatement {
+  form_submission.FormSubmission form_submission = 1;
+  bool state_confirmation = 2;
+  google.protobuf.Timestamp review_date = 3;
+  google.protobuf.BoolValue trading_on_market = 4;
+  google.protobuf.BoolValue dtr5_applies = 5;
+  google.protobuf.BoolValue psc_exempt_as_trading_on_regulated_market = 6;
+  google.protobuf.BoolValue psc_exempt_as_shares_admitted_on_market = 7;
+  google.protobuf.BoolValue psc_exempt_as_trading_on_uk_regulated_market = 8;
+  repeated string sic_codes = 9;
+  repeated base_types.Capital statement_of_capital = 10;
+  repeated Shareholding shareholdings = 23;
+}
+
+message Shareholding {
+  string share_class = 1;
+  double number_held = 2;
+  repeated Transfer transfers = 3;
+  repeated Shareholder shareholders = 4;
+}
+
+message Shareholder {
+  message PartsName {
+    string surname = 1;
+    google.protobuf.StringValue forename = 2;
+  }
+
+  oneof name {
+    PartsName parts_name = 1;
+    string amalgamated_name = 2;
+  }
+  base_types.BaseAddress address = 3;
+}
+
+message Transfer {
+  google.protobuf.Timestamp date_of_transfer = 1;
+  double number_of_shares_transferred = 2;
+}

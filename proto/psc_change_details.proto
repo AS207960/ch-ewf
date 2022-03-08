@@ -1,0 +1,45 @@
+syntax = "proto3";
+package ch_ewf.psc_change_details;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "base_types.proto";
+import "form_submission.proto";
+import "psc.proto";
+
+message PSCChangeDetails {
+  form_submission.FormSubmission form_submission = 1;
+  oneof entity {
+    Corporate corporate = 2;
+    LegalPerson legal_person = 3;
+    Individual individual = 4;
+  }
+  google.protobuf.Timestamp date_of_change = 5;
+  google.protobuf.Timestamp register_entry_date = 6;
+}
+
+message Corporate {
+  string corporate_name = 1;
+  google.protobuf.StringValue new_corporate_name = 2;
+  base_types.CompanyAddress new_address = 3;
+  psc.CorporateIdentification new_corporate_identification = 4;
+  psc.NatureOfControls new_nature_of_controls = 5;
+}
+
+message LegalPerson {
+  string legal_person_name = 1;
+  google.protobuf.StringValue new_legal_person_name = 2;
+  base_types.CompanyAddress new_address = 3;
+  psc.LegalPersonIdentification new_legal_person_identification = 4;
+  psc.NatureOfControls new_nature_of_controls = 5;
+}
+
+message Individual {
+  psc.IndividualIdentification identification = 1;
+  base_types.PersonName new_name = 2;
+  base_types.ServiceAddress new_service_address = 3;
+  base_types.ResidentialAddress new_residential_address = 4;
+  google.protobuf.StringValue new_nationality = 5;
+  google.protobuf.StringValue new_country_of_residence = 6;
+  psc.NatureOfControls new_nature_of_controls = 7;
+}
