@@ -30,7 +30,7 @@ We're unable to openly share our own live package reference.
 
 ### gRPC spec
 
-The gRPC protobuf files are available in [`proto/`](tree/root/proto/).
+The gRPC protobuf files are available in [`proto/`](proto/).
 
 ### Building
 
