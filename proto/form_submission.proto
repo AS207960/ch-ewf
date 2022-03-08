@@ -27,3 +27,52 @@ message SubmissionResponse {
   string ch_submission_number = 2;
   string submission_id = 3;
 }
+
+message SubmissionStatusRequest {
+  string submission_id = 1;
+}
+
+message SubmissionStatusResponse {
+  SubmissionStatus status = 1;
+  string ch_submission_number = 2;
+  string company_number = 3;
+  string customer_reference = 4;
+  string examiner_telephone = 5;
+  string examiner_comment = 6;
+  string document_id = 7;
+  string charge_code = 8;
+  google.protobuf.Timestamp incorporation_date = 9;
+  string authentication_code = 10;
+  string reject_reference = 11;
+  repeated Rejection rejections = 12;
+}
+
+message Rejection {
+  int32 reject_code = 1;
+  string description = 2;
+  int32 instance_number = 3;
+}
+
+enum SubmissionStatus {
+  Pending = 0;
+  Accepted = 1;
+  Rejected = 2;
+  Parked = 3;
+  InternalFailure = 4;
+}
+
+message DocumentRequest {
+  string document_id = 1;
+}
+
+message DocumentResponse {
+  google.protobuf.Timestamp date = 1;
+  string ch_document_id = 2;
+  ContentType content_type = 3;
+  string ch_filename = 4;
+  bytes data = 5;
+}
+
+enum ContentType {
+  Pdf = 0;
+}

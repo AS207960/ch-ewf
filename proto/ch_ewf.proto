@@ -36,6 +36,8 @@ service CHFilling {
   rpc PaymentPeriods (payment_periods.PaymentPeriodsRequest) returns (payment_periods.PaymentPeriodsResponse) {}
   rpc MembersRegister (members_data.MembersRegisterRequest) returns (members_data.MembersRegisterResponse) {}
   rpc ChargeSearch (charge_search.ChargeSearchRequest) returns (charge_search.ChargeSearchResponse) {}
+  rpc SubmissionStatus (form_submission.SubmissionStatusRequest) returns (form_submission.SubmissionStatusResponse) {}
+  rpc Document (form_submission.DocumentRequest) returns (form_submission.DocumentResponse) {}
   // AD01 / LLAD01
   rpc ChangeRegisteredOffice (change_registered_office.ChangeRegisteredOffice) returns (form_submission.SubmissionResponse) {}
   // AD02 / LLAD02
