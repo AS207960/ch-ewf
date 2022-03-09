@@ -14,6 +14,13 @@ presenter_email = "<last resort contact email>"
 package_reference = "<assigned by companies house>"
 database_url = "postgres://user:pass@host/db_name"
 documents_path = "<path to store response PDFs>"
+listen_socket = "[::1]:50051"
+test_mode = False
+
+[tls] # All certificates in PEM format
+server_tls_cert_path = "<path to TLS cert>"
+server_tls_cert_path = "<path to TLS key>"
+client_ca_path = "<path to client cert CA>"
 ```
 
 The client can also be configured using environment variables, of the form `CH_EWF_PRESENTER_ID` etc.

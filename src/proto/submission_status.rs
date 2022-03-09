@@ -116,7 +116,7 @@ pub struct Reject {
         serialize = "{http://xmlgw.companieshouse.gov.uk}RejectCode",
         deserialize = "{http://www.govtalk.gov.uk/CM/envelope}RejectCode",
     ))]
-    pub reject_code: String,
+    pub reject_code: i32,
     #[serde(rename(
         serialize = "{http://xmlgw.companieshouse.gov.uk}Description",
         deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Description",
@@ -126,7 +126,7 @@ pub struct Reject {
         serialize = "{http://xmlgw.companieshouse.gov.uk}InstanceNumber",
         deserialize = "{http://www.govtalk.gov.uk/CM/envelope}InstanceNumber",
     ), default)]
-    pub instance_number: Option<String>
+    pub instance_number: Option<i32>
 }
 
 #[derive(Debug, Deserialize)]

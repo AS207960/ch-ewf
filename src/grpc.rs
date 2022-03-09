@@ -3,6 +3,7 @@ use std::convert::{TryFrom, TryInto};
 use rand::Rng;
 use diesel::prelude::*;
 use tokio_diesel::{OptionalExtension, AsyncConnection, AsyncRunQueryDsl};
+use crate::schema::documents::document_date;
 
 /// Helper function to convert chrono times to protobuf well-known type times
 pub fn chrono_to_proto<T: chrono::TimeZone>(
@@ -171,7 +172,7 @@ impl CHFillingService {
                     } else {
                         Some(form_submission.contact_number)
                     },
-                    customer_reference: None,
+                    customer_reference: form_submission.customer_reference.clone(),
                 },
                 date_signed: match proto_to_chrono(form_submission.date_signed) {
                     Some(d) => d.date(),
@@ -195,6 +196,7 @@ impl CHFillingService {
             ch_submission_id: submission_number.clone(),
             company_number: Some(format!("{}{}", company_type.to_string(), form_submission.company_number)),
             received_timestamp: res.gateway_timestamp.naive_utc(),
+            customer_reference: form_submission.customer_reference,
             status: schema::Status::Pending,
             reject_reference: None,
             examiner_telephone: None,
@@ -282,6 +284,7 @@ impl CHFillingService {
                             proto::submission_status::StatusCode::Parked => schema::Status::Parked,
                             proto::submission_status::StatusCode::InternalFailure => schema::Status::InternalFailure,
                         };
+                        submission.customer_reference = status.customer_reference;
                         if submission.company_number.is_none() {
                             submission.company_number = status.company_number;
                         }
@@ -567,6 +570,123 @@ impl TryFrom<ch_ewf_grpc::company_incorporation::Person> for proto::company_inco
 
 #[tonic::async_trait]
 impl ch_ewf_grpc::ch_filling_server::ChFilling for CHFillingService {
+    async fn submission_status(
+        &self,
+        request: tonic::Request<ch_ewf_grpc::form_submission::SubmissionStatusRequest>,
+    ) -> Result<tonic::Response<ch_ewf_grpc::form_submission::SubmissionStatusResponse>, tonic::Status> {
+        let msg = request.into_inner();
+
+        let submission_id = match uuid::Uuid::parse_str(&msg.submission_id) {
+            Ok(i) => i,
+            Err(_) => {
+                return Err(tonic::Status::not_found("Invalid submission ID"));
+            }
+        };
+        let submission = match schema::submissions::dsl::submissions
+            .filter(schema::submissions::dsl::id.eq(submission_id))
+            .get_result_async::<models::Submission>(&self.connection).await
+            .optional() {
+            Ok(Some(s)) => s,
+            Ok(None) => {
+                return Err(tonic::Status::not_found("Submission not found"));
+            }
+            Err(err) => {
+                error!("Unable to access DB: {}", err);
+                return Err(tonic::Status::internal("Error accessing database"));
+            }
+        };
+        let rejections = match schema::submission_rejections::dsl::submission_rejections
+            .filter(schema::submission_rejections::dsl::submission_id.eq(submission.id))
+            .get_results_async::<models::SubmissionRejection>(&self.connection).await {
+            Ok(r) => r,
+            Err(err) => {
+                error!("Unable to access DB: {}", err);
+                return Err(tonic::Status::internal("Error accessing database"));
+            }
+        };
+
+        let reply = ch_ewf_grpc::form_submission::SubmissionStatusResponse {
+            status: match submission.status {
+                schema::Status::Accepted => ch_ewf_grpc::form_submission::SubmissionStatus::Accepted.into(),
+                schema::Status::Rejected => ch_ewf_grpc::form_submission::SubmissionStatus::Rejected.into(),
+                schema::Status::Pending => ch_ewf_grpc::form_submission::SubmissionStatus::Pending.into(),
+                schema::Status::Parked => ch_ewf_grpc::form_submission::SubmissionStatus::Parked.into(),
+                schema::Status::InternalFailure => ch_ewf_grpc::form_submission::SubmissionStatus::InternalFailure.into(),
+            },
+            received_timestamp: chrono_to_proto::<chrono::Utc>(
+                Some(chrono::DateTime::from_utc(submission.received_timestamp, chrono::Utc))
+            ),
+            ch_submission_number: submission.ch_submission_id,
+            company_number: submission.company_number.unwrap_or_default(),
+            customer_reference: submission.customer_reference.unwrap_or_default(),
+            examiner_telephone: submission.examiner_telephone.unwrap_or_default(),
+            examiner_comment: submission.examiner_comment.unwrap_or_default(),
+            document_id: submission.document_id.map(|d| d.to_string()).unwrap_or_default(),
+            charge_code: submission.charge_code.unwrap_or_default(),
+            incorporation_date: chrono_to_proto::<chrono::Utc>(
+                submission.incorporation_date
+                    .map(|d| chrono::DateTime::from_utc(d.and_hms(0, 0, 0), chrono::Utc))
+            ),
+            authentication_code: submission.authentication_code.unwrap_or_default(),
+            reject_reference: submission.reject_reference.unwrap_or_default(),
+            rejections: rejections.into_iter().map(|r| ch_ewf_grpc::form_submission::Rejection {
+                reject_code: r.code,
+                description: r.description,
+                instance_number: r.instance_number
+            }).collect(),
+        };
+
+        Ok(tonic::Response::new(reply))
+    }
+
+    async fn document(
+        &self,
+        request: tonic::Request<ch_ewf_grpc::form_submission::DocumentRequest>,
+    ) -> Result<tonic::Response<ch_ewf_grpc::form_submission::DocumentResponse>, tonic::Status> {
+        let msg = request.into_inner();
+
+        let document_id = match uuid::Uuid::parse_str(&msg.document_id) {
+            Ok(i) => i,
+            Err(_) => {
+                return Err(tonic::Status::not_found("Invalid document ID"));
+            }
+        };
+        let document = match schema::documents::dsl::documents
+            .filter(schema::documents::dsl::id.eq(document_id))
+            .get_result_async::<models::Documents>(&self.connection).await
+            .optional() {
+            Ok(Some(s)) => s,
+            Ok(None) => {
+                return Err(tonic::Status::not_found("Document not found"));
+            }
+            Err(err) => {
+                error!("Unable to access DB: {}", err);
+                return Err(tonic::Status::internal("Error accessing database"));
+            }
+        };
+
+        let file_path = self.documents_path.join(&document.storage_filename);
+        let file_data = match tokio::fs::read(file_path).await {
+            Ok(d) => d,
+            Err(err) => {
+                error!("Unable to read document: {}", err);
+                return Err(tonic::Status::internal("Error accessing document"));
+            }
+        };
+
+        let reply = ch_ewf_grpc::form_submission::DocumentResponse {
+            date: chrono_to_proto::<chrono::Utc>(Some(
+                chrono::DateTime::from_utc(document.document_date.and_hms(0, 0, 0), chrono::Utc)
+            )),
+            ch_document_id: document.document_id,
+            content_type: ch_ewf_grpc::form_submission::ContentType::Pdf.into(),
+            ch_filename: document.document_filename,
+            data: file_data,
+        };
+
+        Ok(tonic::Response::new(reply))
+    }
+
     async fn company_data(
         &self,
         request: tonic::Request<ch_ewf_grpc::company_data::CompanyDataRequest>,
@@ -2689,7 +2809,7 @@ impl ch_ewf_grpc::ch_filling_server::ChFilling for CHFillingService {
                     } else {
                         Some(msg.contact_number)
                     },
-                    customer_reference: None,
+                    customer_reference: msg.customer_reference.clone(),
                 },
                 date_signed: match proto_to_chrono(msg.date_signed) {
                     Some(d) => d.date(),
@@ -3010,6 +3130,7 @@ impl ch_ewf_grpc::ch_filling_server::ChFilling for CHFillingService {
             ch_submission_id: submission_number.clone(),
             company_number: None,
             received_timestamp: res.gateway_timestamp.naive_utc(),
+            customer_reference: msg.customer_reference,
             status: schema::Status::Pending,
             reject_reference: None,
             examiner_telephone: None,

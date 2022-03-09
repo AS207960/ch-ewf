@@ -161,7 +161,16 @@ struct Config {
     #[serde(default = "default_listen_url")]
     listen_socket: std::net::SocketAddr,
     #[serde(default)]
-    test_mode: bool
+    test_mode: bool,
+    #[serde(default)]
+    tls: Option<TLSConfig>
+}
+
+#[derive(Debug, Deserialize)]
+struct TLSConfig {
+    server_tls_cert_path: std::path::PathBuf,
+    server_tls_key_path: std::path::PathBuf,
+    client_ca_path: Option<std::path::PathBuf>,
 }
 
 fn default_listen_url() -> std::net::SocketAddr {
@@ -203,14 +212,29 @@ async fn main() {
 
     let connection = establish_connection(settings.database_url);
 
-    info!("Migrating database...");
-    embedded_migrations::run(&connection.get().expect("Unable to get DB connection"))
-        .expect("Unable to apply migrations");
-
     let sender = gov_talk::GovTalkSender::new(
         &settings.presenter_email, &settings.presenter_id, &settings.presenter_code,
         settings.test_mode
     );
+
+    let mut server_builder = tonic::transport::Server::builder();
+    if let Some(tls_config) = settings.tls {
+        let mut server_tls_config = tonic::transport::server::ServerTlsConfig::new();
+        let tls_cert = tokio::fs::read(tls_config.server_tls_cert_path).await.expect("Unable to read server TLS certificate");
+        let tls_key = tokio::fs::read(tls_config.server_tls_key_path).await.expect("Unable to read server TLS key");
+        server_tls_config = server_tls_config.identity(tonic::transport::Identity::from_pem(tls_cert, tls_key));
+        if let Some(client_ca_path) = tls_config.client_ca_path {
+            let client_ca = tokio::fs::read(client_ca_path).await.expect("Unable to read client CA certificate");
+            server_tls_config = server_tls_config.client_ca_root(tonic::transport::Certificate::from_pem(client_ca));
+        }
+        server_builder = server_builder.tls_config(server_tls_config).expect("Unable to apply TLS config");
+    }
+
+
+    info!("Migrating database...");
+    embedded_migrations::run(&connection.get().expect("Unable to get DB connection"))
+        .expect("Unable to apply migrations");
+
     let service = grpc::CHFillingService {
         sender,
         connection,
@@ -218,17 +242,15 @@ async fn main() {
         presenter_id: settings.presenter_id,
         package_reference: settings.package_reference,
     };
+    let w_service = service.clone();
+    let server = server_builder
+        .add_service(ch_ewf_grpc::ch_filling_server::ChFillingServer::new(service));
 
     info!("Starting submission watcher...");
-    let w_service = service.clone();
     tokio::task::spawn(async move {
         w_service.watcher().await
     });
 
     info!("Starting server...");
-    tonic::transport::Server::builder()
-        .add_service(ch_ewf_grpc::ch_filling_server::ChFillingServer::new(service))
-        .serve(settings.listen_socket)
-        .await
-        .expect("Unable to start listener");
+    server.serve(settings.listen_socket).await.expect("Unable to start listener");
 }

@@ -7,6 +7,7 @@ pub struct Submission {
     pub ch_submission_id: String,
     pub company_number: Option<String>,
     pub received_timestamp: chrono::NaiveDateTime,
+    pub customer_reference: Option<String>,
     pub status: super::schema::Status,
     pub reject_reference: Option<String>,
     pub examiner_telephone: Option<String>,
@@ -22,9 +23,9 @@ pub struct Submission {
 pub struct SubmissionRejection {
     pub id: uuid::Uuid,
     pub submission_id: uuid::Uuid,
-    pub code: String,
+    pub code: i32,
     pub description: String,
-    pub instance_number: Option<String>
+    pub instance_number: Option<i32>
 }
 
 #[derive(Insertable, Queryable, Identifiable, AsChangeset, Clone, Debug)]

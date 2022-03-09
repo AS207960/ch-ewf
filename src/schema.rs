@@ -13,6 +13,7 @@ table! {
         ch_submission_id -> Varchar,
         company_number -> Nullable<Varchar>,
         received_timestamp -> Timestamp,
+        customer_reference -> Nullable<Varchar>,
         status -> crate::schema::StatusMapping,
         reject_reference -> Nullable<Varchar>,
         examiner_telephone -> Nullable<Varchar>,
@@ -28,9 +29,9 @@ table! {
     submission_rejections (id) {
         id -> Uuid,
         submission_id -> Uuid,
-        code -> Varchar,
+        code -> Integer,
         description -> Varchar,
-        instance_number -> Nullable<Varchar>,
+        instance_number -> Nullable<Integer>,
     }
 }
 

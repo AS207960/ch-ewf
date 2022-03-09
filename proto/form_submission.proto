@@ -35,22 +35,23 @@ message SubmissionStatusRequest {
 message SubmissionStatusResponse {
   SubmissionStatus status = 1;
   string ch_submission_number = 2;
-  string company_number = 3;
-  string customer_reference = 4;
-  string examiner_telephone = 5;
-  string examiner_comment = 6;
-  string document_id = 7;
-  string charge_code = 8;
-  google.protobuf.Timestamp incorporation_date = 9;
-  string authentication_code = 10;
-  string reject_reference = 11;
-  repeated Rejection rejections = 12;
+  google.protobuf.Timestamp received_timestamp = 3;
+  string company_number = 4;
+  string customer_reference = 5;
+  string examiner_telephone = 6;
+  string examiner_comment = 7;
+  string document_id = 8;
+  string charge_code = 9;
+  google.protobuf.Timestamp incorporation_date = 10;
+  string authentication_code = 11;
+  string reject_reference = 12;
+  repeated Rejection rejections = 13;
 }
 
 message Rejection {
   int32 reject_code = 1;
   string description = 2;
-  int32 instance_number = 3;
+  google.protobuf.Int32Value instance_number = 3;
 }
 
 enum SubmissionStatus {

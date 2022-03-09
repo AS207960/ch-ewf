@@ -15,6 +15,7 @@ CREATE TABLE submissions (
     ch_submission_id VARCHAR NOT NULL,
     company_number VARCHAR,
     received_timestamp TIMESTAMP NOT NULL,
+    customer_reference VARCHAR,
     status status NOT NULL,
     reject_reference VARCHAR,
     examiner_telephone VARCHAR,
@@ -28,7 +29,7 @@ CREATE TABLE submissions (
 CREATE TABLE submission_rejections (
     id UUID PRIMARY KEY,
     submission_id UUID REFERENCES submissions(id) NOT NULL,
-    code VARCHAR NOT NULL,
+    code INTEGER NOT NULL,
     description VARCHAR NOT NULL,
-    instance_number VARCHAR
+    instance_number INT
 );
