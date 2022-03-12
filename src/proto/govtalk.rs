@@ -470,11 +470,11 @@ pub enum GovTalkBody {
     MembersData(super::members_data::MembersData),
     #[serde(rename = "{http://xmlgw.companieshouse.gov.uk;http://xmlgw.companieshouse.gov.uk/v1-0/schema/PaymentPeriods-v1-0.xsd}PaymentPeriodsRequest", skip_deserializing)]
     PaymentPeriodsRequest(super::payment_periods::PaymentPeriodsRequest),
-    #[serde(rename = "{http://www.govtalk.gov.uk/CM/envelope}PaymentPeriods", skip_serializing)]
+    #[serde(rename = "{http://xmlgw.companieshouse.gov.uk/v1-0/schema}PaymentPeriods", skip_serializing)]
     PaymentPeriods(super::payment_periods::PaymentPeriods),
-    #[serde(rename = "{http://www.govtalk.gov.uk/CM/envelope;http://xmlgw.companieshouse.gov.uk/v1-0/schema/EReminders-v1-0.xsd}GetERemindersRequest", skip_deserializing)]
+    #[serde(rename = "{http://xmlgw.companieshouse.gov.uk;http://xmlgw.companieshouse.gov.uk/v1-0/schema/EReminders-v1-0.xsd}GetERemindersRequest", skip_deserializing)]
     GetERemindersRequest(super::e_reminders::GetERemindersRequest),
-    #[serde(rename = "{http://www.govtalk.gov.uk/CM/envelope;http://xmlgw.companieshouse.gov.uk/v1-0/schema/EReminders-v1-0.xsd}SetERemindersRequest", skip_deserializing)]
+    #[serde(rename = "{http://xmlgw.companieshouse.gov.uk;http://xmlgw.companieshouse.gov.uk/v1-0/schema/EReminders-v1-0.xsd}SetERemindersRequest", skip_deserializing)]
     SetERemindersRequest(super::e_reminders::SetERemindersRequest),
     #[serde(rename = "{http://www.govtalk.gov.uk/CM/envelope}EReminders", skip_serializing)]
     EReminders(super::e_reminders::EReminders),

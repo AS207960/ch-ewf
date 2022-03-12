@@ -111,7 +111,7 @@ pub struct UKAddress {
     ), default, skip_serializing_if = "Option::is_none")]
     pub street: Option<String>,
     #[serde(rename(
-        serialize =  "{http://xmlgw.companieshouse.gov.uk}Thoroughfare",
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Thoroughfare",
         deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Thoroughfare",
     ), default, skip_serializing_if = "Option::is_none")]
     pub thoroughfare: Option<String>,
@@ -203,33 +203,29 @@ pub struct BaseAddress {
 pub struct CompanyAddress {
     #[serde(rename = "$value")]
     pub base_address: BaseAddress,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}CareofName",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}CareofName",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}CareofName",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}CareofName",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub care_of_name: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}PoBox",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}PoBox",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}PoBox",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}PoBox",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub po_box: Option<String>
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum AddressCountry {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Country",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Country"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Country",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Country"
+    ))]
     Country(AddressCountryType),
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}OtherForeignCountry",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}OtherForeignCountry"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}OtherForeignCountry",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}OtherForeignCountry"
+    ))]
     OtherCountry(String)
 }
 
@@ -299,67 +295,63 @@ pub enum AddressCountryType {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct StatementOfCapital {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Capital",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Capital"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Capital",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Capital"
+    ))]
     pub capital: Vec<Capital>
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Capital {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}TotalAmountUnpaid",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}TotalAmountUnpaid",
-        default,
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}TotalAmountUnpaid",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}TotalAmountUnpaid",
+    ), default)]
     pub total_amount_unpaid: f64,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}TotalNumberOfIssuedShares",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}TotalNumberOfIssuedShares",
-        default
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}TotalNumberOfIssuedShares",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}TotalNumberOfIssuedShares",
+    ), default)]
     pub total_issued_shares: f64,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}ShareCurrency",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}ShareCurrency",
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}ShareCurrency",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}ShareCurrency",
+    ))]
     pub share_currency: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}TotalAggregateNominalValue",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}TotalAggregateNominalValue",
-        default
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}TotalAggregateNominalValue",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}TotalAggregateNominalValue",
+    ), default)]
     pub total_aggregate_value: f64,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Shares",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Shares"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Shares",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Shares"
+    ))]
     pub shares: Vec<Share>
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Share {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}ShareClass",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}ShareClass"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}ShareClass",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}ShareClass"
+    ))]
     pub share_class: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}PrescribedParticulars",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}PrescribedParticulars",
-        default
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}PrescribedParticulars",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}PrescribedParticulars",
+    ), default)]
     pub particulars: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}NumShares",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}NumShares"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}NumShares",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}NumShares"
+    ))]
     pub num_shares: f64,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}AggregateNominalValue",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}AggregateNominalValue"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}AggregateNominalValue",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}AggregateNominalValue"
+    ))]
     pub aggregate_value: f64,
 }
 
@@ -377,7 +369,10 @@ pub struct Shares {
     pub num_shares: f64,
     #[serde(rename = "{http://xmlgw.companieshouse.gov.uk}ShareClass")]
     pub share_class: String,
-    #[serde(rename = "{http://xmlgw.companieshouse.gov.uk}ShareReference", default)]
+    #[serde(
+        rename = "{http://xmlgw.companieshouse.gov.uk}ShareReference",
+        default, skip_serializing_if = "Option::is_none"
+    )]
     pub share_reference: Option<String>,
 }
 
@@ -397,8 +392,7 @@ pub struct StocksHeld {
     pub amount_held: f64,
     #[serde(
         rename = "{http://xmlgw.companieshouse.gov.uk}Currency",
-        default,
-        skip_serializing_if = "Option::is_none"
+        default, skip_serializing_if = "Option::is_none"
     )]
     pub currency: Option<String>,
 }
@@ -427,134 +421,116 @@ pub enum CompanyMemberName {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Person {
-    #[serde(rename = "{http://xmlgw.companieshouse.gov.uk}Forename")]
-    pub forename: String,
     #[serde(rename = "{http://xmlgw.companieshouse.gov.uk}Surname")]
     pub surname: String,
+    #[serde(rename = "{http://xmlgw.companieshouse.gov.uk}Forename")]
+    pub forename: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PersonReturnType {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Title",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Title",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Title",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Title",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub title: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Forename",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Forename",
-        default,
-        skip_serializing_if = "Vec::is_empty"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Forename",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Forename",
+    ), default, skip_serializing_if = "Vec::is_empty")]
     pub forenames: Vec<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Surname",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Surname"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Surname",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Surname"
+    ))]
     pub surname: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PersonType {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Title",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Title",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Title",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Title",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub title: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Surname",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Surname"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Surname",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Surname"
+    ))]
     pub surname: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Forename",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Forename",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Forename",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Forename",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub forename: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}OtherForenames",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}OtherForenames",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}OtherForenames",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}OtherForenames",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub other_forenames: Option<String>,
 }
 
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PersonType2 {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Title",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Title",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Title",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Title",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub title: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Forename",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Forename",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Forename",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Forename",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub forename: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}OtherForenames",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}OtherForenames",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}OtherForenames",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}OtherForenames",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub other_forenames: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Surname",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Surname"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Surname",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Surname"
+    ))]
     pub surname: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub enum ServiceAddressType {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}SameAsRegisteredOffice",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}SameAsRegisteredOffice"
-    )]
-    SameAsRegisteredOffice(bool),
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Address",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Address"
-    )]
-    Address(Box<CompanyAddress>)
+pub struct ServiceAddressType {
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}SameAsRegisteredOffice",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}SameAsRegisteredOffice"
+    ), default, skip_serializing_if = "super::is_false")]
+    pub same_as_registered_office: bool,
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Address",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Address"
+    ), default, skip_serializing_if = "Option::is_none")]
+    pub address: Option<Box<CompanyAddress>>
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub enum ResidentialAddressType {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}SameAsServiceAddress",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}SameAsServiceAddress"
-    )]
-    SameAsServiceAddress(bool),
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Address",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Address"
-    )]
-    Address(ResidentialBaseAddress)
+pub struct ResidentialAddressType {
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}SameAsServiceAddress",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}SameAsServiceAddress"
+    ), default, skip_serializing_if = "super::is_false")]
+    pub same_as_service_address: bool,
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Address",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Address"
+    ), default, skip_serializing_if = "Option::is_none")]
+    pub address: Option<ResidentialBaseAddress>
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ResidentialBaseAddress {
     #[serde(rename = "$value")]
     pub address: BaseAddress,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}SecureAddressInd",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}SecureAddressInd",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}SecureAddressInd",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}SecureAddressInd",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub secure_address: Option<bool>
 }
 
@@ -562,46 +538,40 @@ pub struct ResidentialBaseAddress {
 pub struct DirectorPersonType<P> {
     #[serde(rename = "$value")]
     pub person: P,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}ServiceAddress",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}ServiceAddress"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}ServiceAddress",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}ServiceAddress"
+    ))]
     pub service_address: ServiceAddressType,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}DOB",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}DOB",
-        deserialize_with = "super::deserialize_date",
-        serialize_with = "super::serialize_date",
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}DOB",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}DOB",
+    ), deserialize_with = "super::deserialize_date", serialize_with = "super::serialize_date")]
     pub date_of_birth: Date<Utc>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Nationality",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Nationality"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Nationality",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Nationality"
+    ))]
     pub nationality: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Occupation",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Occupation"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Occupation",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Occupation"
+    ))]
     pub occupation: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}CountryOfResidence",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}CountryOfResidence",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}CountryOfResidence",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}CountryOfResidence",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub country_of_residence: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}PreviousNames",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}PreviousNames",
-        default,
-        skip_serializing_if = "Vec::is_empty"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}PreviousNames",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}PreviousNames",
+    ), default, skip_serializing_if = "Vec::is_empty")]
     pub previous_names: Vec<PreviousNameType>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}ResidentialAddress",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}ResidentialAddress"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}ResidentialAddress",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}ResidentialAddress"
+    ))]
     pub residential_address: ResidentialAddressType
 }
 
@@ -609,17 +579,15 @@ pub struct DirectorPersonType<P> {
 pub struct SecretaryPersonType<P> {
     #[serde(rename = "$value")]
     pub person: P,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}ServiceAddress",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}ServiceAddress"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}ServiceAddress",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}ServiceAddress"
+    ))]
     pub service_address: ServiceAddressType,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}PreviousNames",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}PreviousNames",
-        default,
-        skip_serializing_if = "Vec::is_empty"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}PreviousNames",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}PreviousNames",
+    ), default, skip_serializing_if = "Vec::is_empty")]
     pub previous_names: Vec<PreviousNameType>,
 }
 
@@ -627,113 +595,104 @@ pub struct SecretaryPersonType<P> {
 pub struct MemberPersonType<P> {
     #[serde(rename = "$value")]
     pub person: P,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}ServiceAddress",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}ServiceAddress"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}ServiceAddress",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}ServiceAddress"
+    ))]
     pub service_address: ServiceAddressType,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}DOB",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}DOB",
-        deserialize_with = "super::deserialize_date",
-        serialize_with = "super::serialize_date",
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}DOB",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}DOB",
+    ), deserialize_with = "super::deserialize_date", serialize_with = "super::serialize_date")]
     pub date_of_birth: Date<Utc>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}CountryOfResidence",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}CountryOfResidence",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}CountryOfResidence",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}CountryOfResidence",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub country_of_residence: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}PreviousNames",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}PreviousNames",
-        default,
-        skip_serializing_if = "Vec::is_empty"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}PreviousNames",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}PreviousNames",
+    ), default, skip_serializing_if = "Vec::is_empty")]
     pub previous_names: Vec<PreviousNameType>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}ResidentialAddress",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}ResidentialAddress"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}ResidentialAddress",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}ResidentialAddress"
+    ))]
     pub residential_address: ResidentialAddressType
 }
 
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PreviousNameType {
-    #[serde(
-        rename = "{http://www.govtalk.gov.uk/CM/envelope}Forename",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Forename",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://www.govtalk.gov.uk/CM/envelope}Forename",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Forename",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub forename: Option<String>,
-    #[serde(
-        rename = "{http://www.govtalk.gov.uk/CM/envelope}Surname",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Surname"
-    )]
+    #[serde(rename(
+        serialize = "{http://www.govtalk.gov.uk/CM/envelope}Surname",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Surname"
+    ))]
     pub surname: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct CorporateOfficerType {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}CorporateName",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}CorporateName"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}CorporateName",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}CorporateName"
+    ))]
     pub corporate_name: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Address",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Address"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Address",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Address"
+    ))]
     pub address: CompanyAddress,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}CompanyIdentification",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}CompanyIdentification",
-        default,
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}CompanyIdentification",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}CompanyIdentification",
+    ), default)]
     pub company_identification: Option<CompanyIdentification>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum CompanyIdentification {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}UK",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}UK"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}UK",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}UK"
+    ))]
     UK {
-        #[serde(
-            rename = "{http://xmlgw.companieshouse.gov.uk}RegistrationNumber",
-            alias = "{http://www.govtalk.gov.uk/CM/envelope}RegistrationNumber"
-        )]
+        #[serde(rename(
+            serialize = "{http://xmlgw.companieshouse.gov.uk}RegistrationNumber",
+            deserialize = "{http://www.govtalk.gov.uk/CM/envelope}RegistrationNumber"
+        ))]
         registration_number: String,
     },
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}NonUK",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}NonUK"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}NonUK",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}NonUK"
+    ))]
     NonUK {
-        #[serde(
-            rename = "{http://xmlgw.companieshouse.gov.uk}PlaceRegistered",
-            alias = "{http://www.govtalk.gov.uk/CM/envelope}PlaceRegistered"
-        )]
+        #[serde(rename(
+            serialize = "{http://xmlgw.companieshouse.gov.uk}PlaceRegistered",
+            deserialize = "{http://www.govtalk.gov.uk/CM/envelope}PlaceRegistered"
+        ))]
         place_registered: Option<String>,
-        #[serde(
-            rename = "{http://xmlgw.companieshouse.gov.uk}RegistrationNumber",
-            alias = "{http://www.govtalk.gov.uk/CM/envelope}RegistrationNumber"
-        )]
+        #[serde(rename(
+            serialize = "{http://xmlgw.companieshouse.gov.uk}RegistrationNumber",
+            deserialize = "{http://www.govtalk.gov.uk/CM/envelope}RegistrationNumber"
+        ))]
         registration_number: Option<String>,
-        #[serde(
-            rename = "{http://xmlgw.companieshouse.gov.uk}LawGoverned",
-            alias = "{http://www.govtalk.gov.uk/CM/envelope}LawGoverned"
-        )]
+        #[serde(rename(
+            serialize = "{http://xmlgw.companieshouse.gov.uk}LawGoverned",
+            deserialize = "{http://www.govtalk.gov.uk/CM/envelope}LawGoverned"
+        ))]
         governing_law: String,
-        #[serde(
-            rename = "{http://xmlgw.companieshouse.gov.uk}LegalForm",
-            alias = "{http://www.govtalk.gov.uk/CM/envelope}LegalForm"
-        )]
+        #[serde(rename(
+            serialize = "{http://xmlgw.companieshouse.gov.uk}LegalForm",
+            deserialize = "{http://www.govtalk.gov.uk/CM/envelope}LegalForm"
+        ))]
         legal_form: String,
     }
 }

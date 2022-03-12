@@ -523,10 +523,11 @@ impl TryFrom<ch_ewf_grpc::officer_resignation::Person> for proto::officer_resign
 impl From<proto::base_types::ServiceAddressType> for ch_ewf_grpc::base_types::ServiceAddress {
     fn from(addr: proto::base_types::ServiceAddressType) -> Self {
         ch_ewf_grpc::base_types::ServiceAddress {
-            value: Some(match addr {
-                proto::base_types::ServiceAddressType::SameAsRegisteredOffice(s) => ch_ewf_grpc::base_types::service_address::Value::SameAsRegisteredOffice(s),
-                proto::base_types::ServiceAddressType::Address(a) => ch_ewf_grpc::base_types::service_address::Value::Address((*a).into())
-            })
+            value: if let Some(address) = addr.address {
+                Some(ch_ewf_grpc::base_types::service_address::Value::Address((*address).into()))
+            } else {
+                Some(ch_ewf_grpc::base_types::service_address::Value::SameAsRegisteredOffice(addr.same_as_registered_office))
+            }
         }
     }
 }
@@ -540,10 +541,16 @@ impl TryFrom<ch_ewf_grpc::base_types::ServiceAddress> for proto::base_types::Ser
                 if !s {
                     return Err(tonic::Status::invalid_argument("Same as registered office must be true"));
                 }
-                Ok(proto::base_types::ServiceAddressType::SameAsRegisteredOffice(true))
+                Ok(proto::base_types::ServiceAddressType {
+                    same_as_registered_office: true,
+                    address: None
+                })
             }
             Some(ch_ewf_grpc::base_types::service_address::Value::Address(a)) => {
-                Ok(proto::base_types::ServiceAddressType::Address(Box::new(a.try_into()?)))
+                Ok(proto::base_types::ServiceAddressType {
+                    same_as_registered_office: false,
+                    address: Some(Box::new(a.try_into()?))
+                })
             }
             None => Err(tonic::Status::invalid_argument("Service address value required"))
         }
@@ -562,10 +569,11 @@ impl From<proto::base_types::ResidentialBaseAddress> for ch_ewf_grpc::base_types
 impl From<proto::base_types::ResidentialAddressType> for ch_ewf_grpc::base_types::ResidentialAddress {
     fn from(addr: proto::base_types::ResidentialAddressType) -> Self {
         ch_ewf_grpc::base_types::ResidentialAddress {
-            value: Some(match addr {
-                proto::base_types::ResidentialAddressType::SameAsServiceAddress(s) => ch_ewf_grpc::base_types::residential_address::Value::SameAsServiceAddress(s),
-                proto::base_types::ResidentialAddressType::Address(a) => ch_ewf_grpc::base_types::residential_address::Value::Address(a.into())
-            })
+            value: if let Some(address) = addr.address {
+                Some(ch_ewf_grpc::base_types::residential_address::Value::Address(address.into()))
+            } else {
+                Some(ch_ewf_grpc::base_types::residential_address::Value::SameAsServiceAddress(addr.same_as_service_address))
+            }
         }
     }
 }
@@ -579,16 +587,22 @@ impl TryFrom<ch_ewf_grpc::base_types::ResidentialAddress> for proto::base_types:
                 if !s {
                     return Err(tonic::Status::invalid_argument("Same as service address must be true"));
                 }
-                Ok(proto::base_types::ResidentialAddressType::SameAsServiceAddress(true))
+                Ok(proto::base_types::ResidentialAddressType {
+                    same_as_service_address: true,
+                    address: None
+                })
             }
             Some(ch_ewf_grpc::base_types::residential_address::Value::Address(a)) => {
-                Ok(proto::base_types::ResidentialAddressType::Address(proto::base_types::ResidentialBaseAddress {
-                    address: match a.address {
-                        Some(a) => a.try_into()?,
-                        None => return Err(tonic::Status::invalid_argument("Base address required"))
-                    },
-                    secure_address: a.secure_address,
-                }))
+                Ok(proto::base_types::ResidentialAddressType {
+                    same_as_service_address: false,
+                    address: Some(proto::base_types::ResidentialBaseAddress {
+                        address: match a.address {
+                            Some(a) => a.try_into()?,
+                            None => return Err(tonic::Status::invalid_argument("Base address required"))
+                        },
+                        secure_address: a.secure_address,
+                    })
+                })
             }
             None => Err(tonic::Status::invalid_argument("Residential address value required"))
         }

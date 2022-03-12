@@ -217,31 +217,31 @@ pub struct PSCNotification {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum PSCNotificationType {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Corporate",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Corporate"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Corporate",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Corporate"
+    ))]
     Corporate(super::psc::PSCCorporateEntity),
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}LegalPerson",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}LegalPerson"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}LegalPerson",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}LegalPerson"
+    ))]
     LegalPerson(super::psc::PSCLegalPerson),
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Individual",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Individual"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Individual",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Individual"
+    ))]
     Individual(Box<PSCIndividual>),
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PSCIndividual {
     #[serde(rename = "$value")]
-    pub individual: super::psc::PSCIndividual,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}ConsentStatement",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}ConsentStatement"
-    )]
+    pub individual: super::psc::PSCIndividual<super::base_types::PersonType2>,
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}ConsentStatement",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}ConsentStatement"
+    ))]
     pub consent_statement: bool
 }
 

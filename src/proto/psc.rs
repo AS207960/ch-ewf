@@ -22,10 +22,10 @@ pub enum PSCLevelStatement {
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct PSCLinkedStatement {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Statement",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Statement"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Statement",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Statement"
+    ))]
     pub statement: PSCLinkedStatementType,
     #[serde(rename = "$value")]
     pub entity: PSCLinkedStatementEntity
@@ -39,43 +39,43 @@ pub enum PSCLinkedStatementType {
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub enum PSCLinkedStatementEntity {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}SuperSecureIndividual",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}SuperSecureIndividual"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}SuperSecureIndividual",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}SuperSecureIndividual"
+    ))]
     SuperSecureIndividual(bool),
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Corporate",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Corporate"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Corporate",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Corporate"
+    ))]
     Corporate(LinkedStatementCorporate),
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}LegalPerson",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}LegalPerson"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}LegalPerson",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}LegalPerson"
+    ))]
     LegalPerson(LinkedStatementLegalPerson),
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Individual",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Individual"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Individual",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Individual"
+    ))]
     Individual(PSCIdentification),
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct LinkedStatementCorporate {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}CorporateName",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}CorporateName"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}CorporateName",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}CorporateName"
+    ))]
     pub corporate_name: String
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct LinkedStatementLegalPerson {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}LegalPersonName",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}LegalPersonName"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}LegalPersonName",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}LegalPersonName"
+    ))]
     pub legal_person_name: String
 }
 
@@ -83,225 +83,192 @@ pub struct LinkedStatementLegalPerson {
 pub struct PSCIdentification {
     #[serde(rename = "$value")]
     pub name: super::base_types::PersonType,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}PartialDOB",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}PartialDOB",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}PartialDOB",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}PartialDOB",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub partial_dob: Option<super::base_types::PartialDOBType>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct PSCIndividual {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Title",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Title",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub title: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Forename",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Forename",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub forename: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}OtherForenames",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}OtherForenames",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub other_forenames: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Surname",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Surname"
-    )]
-    pub surname: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}ServiceAddress",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}ServiceAddress"
-    )]
+pub struct PSCIndividual<P> {
+    #[serde(rename = "$value")]
+    pub person: P,
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}ServiceAddress",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}ServiceAddress"
+    ))]
     pub service_address: super::base_types::ServiceAddressType,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}DOB",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}DOB",
-        deserialize_with = "super::deserialize_date",
-        serialize_with = "super::serialize_date"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}DOB",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}DOB",
+    ), deserialize_with = "super::deserialize_date", serialize_with = "super::serialize_date")]
     pub date_of_birth: Date<Utc>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Nationality",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Nationality"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Nationality",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Nationality"
+    ))]
     pub nationality: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}CountryOfResidence",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}CountryOfResidence",
-        default
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}CountryOfResidence",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}CountryOfResidence",
+    ), default)]
     pub country_of_residence: Option<String>,
-    #[serde(
-        rename = "{http://www.govtalk.gov.uk/CM/envelope}ResidentialAddress",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}ResidentialAddress",
-    )]
+    #[serde(rename(
+        serialize = "{http://www.govtalk.gov.uk/CM/envelope}ResidentialAddress",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}ResidentialAddress",
+    ))]
     pub residential_address: super::base_types::ResidentialAddressType,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub enum PSCNotificationType {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Corporate",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Corporate"
-    )]
+pub enum PSCNotificationType<P> {
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Corporate",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Corporate"
+    ))]
     Corporate(PSCCorporateEntity),
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}LegalPerson",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}LegalPerson"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}LegalPerson",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}LegalPerson"
+    ))]
     LegalPerson(PSCLegalPerson),
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Individual",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Individual"
-    )]
-    Individual(Box<PSCIndividual>),
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Individual",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Individual"
+    ))]
+    Individual(Box<PSCIndividual<P>>),
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum PSCStatementNotificationType {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}CompanyStatement",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}CompanyStatement"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}CompanyStatement",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}CompanyStatement"
+    ))]
     Company(CompanyLevelStatement),
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}PSCStatement",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}PSCStatement"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}PSCStatement",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}PSCStatement"
+    ))]
     Psc(PSCLevelStatement),
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}PSCLinkedStatement",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}PSCLinkedStatement"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}PSCLinkedStatement",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}PSCLinkedStatement"
+    ))]
     PscLinked(PSCLinkedStatement),
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PSCCorporateEntity {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}CorporateName",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}CorporateName"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}CorporateName",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}CorporateName"
+    ))]
     pub corporate_name: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Address",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Address"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Address",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Address"
+    ))]
     pub address: super::base_types::CompanyAddress,
-    #[serde(
-        rename = "{http://www.govtalk.gov.uk/CM/envelope}PSCCompanyIdentification",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}PSCCompanyIdentification"
-    )]
+    #[serde(rename(
+        serialize = "{http://www.govtalk.gov.uk/CM/envelope}PSCCompanyIdentification",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}PSCCompanyIdentification"
+    ))]
     pub company_identification: PSCCorporateIdentification,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PSCCorporateIdentification {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}PSCPlaceRegistered",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}PSCPlaceRegistered",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}PSCPlaceRegistered",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}PSCPlaceRegistered",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub place_registered: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}PSCRegistrationNumber",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}PSCRegistrationNumber",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}PSCRegistrationNumber",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}PSCRegistrationNumber",
+    ), default, skip_serializing_if = "Option::is_none")]
     pub registration_number: Option<String>,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}LawGoverned",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}LawGoverned"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}LawGoverned",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}LawGoverned"
+    ))]
     pub law_governed: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}LegalForm",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}LegalForm"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}LegalForm",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}LegalForm"
+    ))]
     pub legal_form: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}CountryOrState",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}CountryOrState"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}CountryOrState",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}CountryOrState"
+    ))]
     pub country_or_state: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PSCLegalPerson {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}LegalPersonName",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}LegalPersonName"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}LegalPersonName",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}LegalPersonName"
+    ))]
     pub name: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}Address",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}Address"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}Address",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}Address"
+    ))]
     pub address: super::base_types::CompanyAddress,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}LegalPersonIdentification",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}LegalPersonIdentification"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}LegalPersonIdentification",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}LegalPersonIdentification"
+    ))]
     pub legal_person_identification: PSCLegalPersonIdentification
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PSCLegalPersonIdentification {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}LawGoverned",
-        alias = "{http://xmlgw.companieshouse.gov.uk}LawGoverned"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}LawGoverned",
+        deserialize = "{http://xmlgw.companieshouse.gov.uk}LawGoverned"
+    ))]
     pub law_governed: String,
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}LegalForm",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}LegalForm",
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}LegalForm",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}LegalForm",
+    ))]
     pub legal_form: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum PSCNatureOfControls {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}NatureOfControls",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}NatureOfControls"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}NatureOfControls",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}NatureOfControls"
+    ))]
     NatureOfControls(NatureOfControls),
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}LLPNatureOfControls",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}LLPNatureOfControls"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}LLPNatureOfControls",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}LLPNatureOfControls"
+    ))]
     LLPNatureOfControls(LLPNatureOfControls),
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct NatureOfControls {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}NatureOfControl",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}NatureOfControl"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}NatureOfControl",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}NatureOfControl"
+    ))]
     pub nature_of_control: Vec<NatureOfControlType>
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct LLPNatureOfControls {
-    #[serde(
-        rename = "{http://xmlgw.companieshouse.gov.uk}NatureOfControl",
-        alias = "{http://www.govtalk.gov.uk/CM/envelope}NatureOfControl"
-    )]
+    #[serde(rename(
+        serialize = "{http://xmlgw.companieshouse.gov.uk}NatureOfControl",
+        deserialize = "{http://www.govtalk.gov.uk/CM/envelope}NatureOfControl"
+    ))]
     pub nature_of_control: Vec<LLPNatureOfControlType>
 }
 

@@ -2,7 +2,7 @@ use std::convert::{TryFrom, TryInto};
 use super::{ch_ewf_grpc, proto};
 use super::grpc::proto_to_chrono;
 
-impl TryFrom<ch_ewf_grpc::psc::Notification> for proto::psc::PSCNotificationType {
+impl TryFrom<ch_ewf_grpc::psc::Notification> for proto::psc::PSCNotificationType<proto::base_types::PersonType2> {
     type Error = tonic::Status;
 
     fn try_from(value: ch_ewf_grpc::psc::Notification) -> Result<Self, Self::Error> {
@@ -91,7 +91,7 @@ impl TryFrom<ch_ewf_grpc::psc::LegalPerson> for proto::psc::PSCLegalPerson {
     }
 }
 
-impl TryFrom<ch_ewf_grpc::psc::Individual> for proto::psc::PSCIndividual {
+impl TryFrom<ch_ewf_grpc::psc::Individual> for proto::psc::PSCIndividual<proto::base_types::PersonType2> {
     type Error = tonic::Status;
 
     fn try_from(c: ch_ewf_grpc::psc::Individual) -> Result<Self, Self::Error> {
@@ -110,33 +110,35 @@ impl TryFrom<ch_ewf_grpc::psc::Individual> for proto::psc::PSCIndividual {
         }
 
         Ok(proto::psc::PSCIndividual {
-            title: if person.title.is_empty() {
-                None
-            } else {
-                if person.title.len() > 50 {
-                    return Err(tonic::Status::invalid_argument("Invalid title"));
-                }
-                Some(person.title)
+            person: proto::base_types::PersonType2 {
+                title: if person.title.is_empty() {
+                    None
+                } else {
+                    if person.title.len() > 50 {
+                        return Err(tonic::Status::invalid_argument("Invalid title"));
+                    }
+                    Some(person.title)
+                },
+                forename: if person.forenames.is_empty() {
+                    None
+                } else {
+                    let forename = person.forenames.remove(0);
+                    if forename.len() > 50 {
+                        return Err(tonic::Status::invalid_argument("Invalid forename"));
+                    }
+                    Some(forename)
+                },
+                other_forenames: if person.forenames.is_empty() {
+                    None
+                } else {
+                    let other_forename = person.forenames.join(" ");
+                    if other_forename.len() > 50 {
+                        return Err(tonic::Status::invalid_argument("Invalid forename"));
+                    }
+                    Some(other_forename)
+                },
+                surname: person.surname,
             },
-            forename: if person.forenames.is_empty() {
-                None
-            } else {
-                let forename = person.forenames.remove(0);
-                if forename.len() > 50 {
-                    return Err(tonic::Status::invalid_argument("Invalid forename"));
-                }
-                Some(forename)
-            },
-            other_forenames: if person.forenames.is_empty() {
-                None
-            } else {
-                let other_forename = person.forenames.join(" ");
-                if other_forename.len() > 50 {
-                    return Err(tonic::Status::invalid_argument("Invalid forename"));
-                }
-                Some(other_forename)
-            },
-            surname: person.surname,
             service_address: match c.service_address {
                 Some(a) => a.try_into()?,
                 None => return Err(tonic::Status::invalid_argument("Service address required"))

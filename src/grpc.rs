@@ -3,7 +3,6 @@ use std::convert::{TryFrom, TryInto};
 use rand::Rng;
 use diesel::prelude::*;
 use tokio_diesel::{OptionalExtension, AsyncConnection, AsyncRunQueryDsl};
-use crate::schema::documents::document_date;
 
 /// Helper function to convert chrono times to protobuf well-known type times
 pub fn chrono_to_proto<T: chrono::TimeZone>(
@@ -852,22 +851,9 @@ impl ch_ewf_grpc::ch_filling_server::ChFilling for CHFillingService {
                                                         }
                                                     ),
                                                 proto::psc::PSCNotificationType::Individual(n) => {
-                                                    let mut forenames = vec![];
-
-                                                    if let Some(forename) = n.forename {
-                                                        forenames.push(forename)
-                                                    }
-                                                    if let Some(forename) = n.other_forenames {
-                                                        forenames.push(forename)
-                                                    }
-
                                                     ch_ewf_grpc::psc::notification::Psc::Individual(
                                                         ch_ewf_grpc::psc::Individual {
-                                                            person: Some(ch_ewf_grpc::base_types::PersonName {
-                                                                title: n.title.unwrap_or_default(),
-                                                                forenames,
-                                                                surname: n.surname,
-                                                            }),
+                                                            person: Some(n.person.into()),
                                                             service_address: Some(n.service_address.to_owned().into()),
                                                             residential_address: Some(n.residential_address.to_owned().into()),
                                                             date_of_birth: chrono_to_proto(Some(n.date_of_birth.and_hms(0, 0, 0))),
@@ -1011,14 +997,14 @@ impl ch_ewf_grpc::ch_filling_server::ChFilling for CHFillingService {
                     value: Some(match &o.director_type {
                         proto::company_data::CompanyDataDirectorType::Person(p) =>
                             ch_ewf_grpc::company_data::director::Value::Person(ch_ewf_grpc::base_types::DirectorPerson {
-                                person: Some(p.person.person.to_owned().into()),
-                                service_address: Some(p.person.service_address.to_owned().into()),
-                                residential_address: p.residential_address.to_owned().map(Into::into),
-                                date_of_birth: chrono_to_proto(Some(p.person.date_of_birth.and_hms(0, 0, 0))),
-                                country_of_residence: p.person.country_of_residence.clone().unwrap_or_default(),
-                                nationality: p.person.nationality.clone(),
-                                occupation: p.person.occupation.clone(),
-                                previous_names: Self::map_previous_names(p.person.previous_names.to_owned()),
+                                person: Some(p.person.to_owned().into()),
+                                service_address: Some(p.service_address.to_owned().into()),
+                                residential_address: Some(p.residential_address.to_owned().into()),
+                                date_of_birth: chrono_to_proto(Some(p.date_of_birth.and_hms(0, 0, 0))),
+                                country_of_residence: p.country_of_residence.clone().unwrap_or_default(),
+                                nationality: p.nationality.clone(),
+                                occupation: p.occupation.clone(),
+                                previous_names: Self::map_previous_names(p.previous_names.to_owned()),
                             }),
                         proto::company_data::CompanyDataDirectorType::Corporate(c) =>
                             ch_ewf_grpc::company_data::director::Value::Corporate((*c.to_owned()).into()),

@@ -3,7 +3,7 @@ use chrono::prelude::*;
 #[derive(Debug, Serialize, Clone)]
 pub struct PSCNotification {
     #[serde(rename = "$value")]
-    pub notification: super::psc::PSCNotificationType,
+    pub notification: super::psc::PSCNotificationType<super::base_types::PersonType2>,
     #[serde(rename = "$value")]
     pub nature_of_control: super::psc::PSCNatureOfControls,
     #[serde(

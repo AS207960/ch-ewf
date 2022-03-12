@@ -28,9 +28,9 @@ pub struct ElectToHold {
 
 #[derive(Debug, Serialize, Clone)]
 pub enum Members {
-    #[serde(rename = "$value")]
+    #[serde(rename = "{http://xmlgw.companieshouse.gov.uk}MemberWithShares")]
     MembersWithShares(Vec<MemberWithShares>),
-    #[serde(rename = "$value")]
+    #[serde(rename = "{http://xmlgw.companieshouse.gov.uk}Member")]
     MembersWithoutShares(Vec<MemberWithoutShares>)
 }
 

@@ -142,7 +142,7 @@ pub struct CompanyDataMember {
 #[derive(Debug, Deserialize)]
 pub enum CompanyDataDirectorType {
     #[serde(rename = "{http://www.govtalk.gov.uk/CM/envelope}Person")]
-    Person(Box<CompanyDataDirectorPersonType>),
+    Person(Box<super::base_types::DirectorPersonType<super::base_types::PersonReturnType>>),
     #[serde(rename = "{http://www.govtalk.gov.uk/CM/envelope}Corporate")]
     Corporate(Box<super::base_types::CorporateOfficerType>),
 }
@@ -164,14 +164,6 @@ pub enum CompanyDataMemberType {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct CompanyDataDirectorPersonType {
-    #[serde(rename = "{http://www.govtalk.gov.uk/CM/envelope}ResidentialAddress", default)]
-    pub residential_address: Option<super::base_types::ResidentialAddressType>,
-    #[serde(rename = "$value")]
-    pub person: super::base_types::DirectorPersonType<super::base_types::PersonReturnType>,
-}
-
-#[derive(Debug, Deserialize)]
 pub struct CompanyDataMemberPersonType {
     #[serde(rename = "{http://www.govtalk.gov.uk/CM/envelope}ResidentialAddress", default)]
     pub residential_address: Option<super::base_types::ResidentialAddressType>,
@@ -190,6 +182,7 @@ pub struct CompanyDataMemberPersonType {
 
 #[derive(Debug, Deserialize)]
 pub enum CompanyCategory {
+    #[serde(rename = "PLC")]
     Plc,
     #[serde(rename = "BYSHR")]
     ByShares,
@@ -203,6 +196,7 @@ pub enum CompanyCategory {
     UnlimitedWithShareCapital,
     #[serde(rename = "UNLCWOSHRCAP")]
     UnlimitedWithoutShareCapital,
+    #[serde(rename = "LLP")]
     Llp
 }
 
@@ -249,9 +243,9 @@ pub enum CompanyDataPSC {
 
 #[derive(Debug, Deserialize)]
 pub struct CompanyDataPSCNotification {
-    #[serde(rename = "$value")]
-    pub notification: super::psc::PSCNotificationType,
-    #[serde(rename = "$value")]
+    #[serde(rename = "$value1")]
+    pub notification: super::psc::PSCNotificationType<super::base_types::PersonReturnType>,
+    #[serde(rename = "$value2")]
     pub nature_of_control: super::psc::PSCNatureOfControls,
     #[serde(
         rename = "{http://www.govtalk.gov.uk/CM/envelope}NotificationDate",
